@@ -1,0 +1,182 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&family=Inter:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-playfair: 'Playfair Display', Georgia, serif;
+  --font-inter: 'Inter', system-ui, sans-serif;
+  --gold-primary: #c9962a;
+  --gold-light: #e6b84a;
+  --gold-dark: #a37820;
+  --onyx: #0d0d0d;
+  --pearl: #f8f4ef;
+  --champagne: #f5e6c8;
+}
+
+@layer base {
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: var(--font-inter);
+    background-color: var(--pearl);
+    color: var(--onyx);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-playfair);
+  }
+
+  /* Custom Scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--gold-primary);
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--gold-dark);
+  }
+}
+
+@layer components {
+  /* Shimmer skeleton loader */
+  .skeleton {
+    background: linear-gradient(
+      90deg,
+      #e8e0d0 25%,
+      #f5ede0 50%,
+      #e8e0d0 75%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.8s ease-in-out infinite;
+  }
+
+  /* Gold gradient text */
+  .text-gold-gradient {
+    background: linear-gradient(135deg, #e6b84a 0%, #c9962a 50%, #a37820 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Gold gradient button */
+  .btn-gold {
+    @apply relative overflow-hidden bg-gold-gradient text-onyx font-semibold px-8 py-3 rounded-none tracking-widest uppercase text-sm transition-all duration-300;
+    background: linear-gradient(135deg, #e6b84a 0%, #c9962a 100%);
+  }
+  .btn-gold::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, #c9962a 0%, #a37820 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  .btn-gold:hover::before {
+    opacity: 1;
+  }
+  .btn-gold span {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Outline gold button */
+  .btn-gold-outline {
+    @apply border border-gold-500 text-gold-600 font-semibold px-8 py-3 tracking-widest uppercase text-sm transition-all duration-300;
+  }
+  .btn-gold-outline:hover {
+    @apply bg-gold-500 text-onyx;
+  }
+
+  /* Product card */
+  .product-card {
+    @apply relative bg-white overflow-hidden transition-all duration-500;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.06);
+  }
+  .product-card:hover {
+    box-shadow: 0 12px 48px rgba(0,0,0,0.15);
+    transform: translateY(-4px);
+  }
+
+  /* Gold divider */
+  .gold-divider {
+    height: 1px;
+    background: linear-gradient(to right, transparent, #c9962a, transparent);
+  }
+
+  /* Section title */
+  .section-title {
+    @apply font-serif text-3xl md:text-4xl lg:text-5xl font-bold text-charcoal text-center;
+  }
+  .section-subtitle {
+    @apply font-sans text-sm tracking-[0.25em] uppercase text-gold-600 text-center mb-3;
+  }
+
+  /* Nav link */
+  .nav-link {
+    @apply relative text-sm font-medium tracking-wider uppercase text-charcoal transition-colors duration-200;
+  }
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: var(--gold-primary);
+    transition: width 0.3s ease;
+  }
+  .nav-link:hover::after,
+  .nav-link.active::after {
+    width: 100%;
+  }
+  .nav-link:hover {
+    color: var(--gold-primary);
+  }
+
+  /* Star rating */
+  .star-filled { color: #e6b84a; }
+  .star-empty  { color: #d1c7b7; }
+}
+
+@layer utilities {
+  .font-serif { font-family: var(--font-playfair); }
+  .font-sans  { font-family: var(--font-inter); }
+
+  /* Hide scrollbar but keep scroll */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Page transition */
+.page-enter {
+  opacity: 0;
+  transform: translateY(12px);
+}
+.page-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
