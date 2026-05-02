@@ -22,67 +22,43 @@ export default function FirebaseAuthUI({ onSuccess }) {
   const recaptchaWidgetRef = useRef(null);
 
   // In your useEffect — replace what you have
-  useEffect(() => {
-    setLoading(true);
+useEffect(() => {
+  // TEMP DEBUG
+  auth.onAuthStateChanged(user => {
+    console.log('🔥 Auth state:', user ? user.email : 'NOT LOGGED IN');
+  });
 
-    // Safety net — catches cases where getRedirectResult resolves null
-    // but Firebase has already restored the session
-    const unsubscribe = auth.onAuthStateChanged((user) => {
-      if (user) {
-        onSuccess?.();
-      }
-      setLoading(false);
-    });
-
-    // Still call getRedirectResult to handle errors/logging
-    getRedirectResult(auth).catch((err) => {
-      if (
-        err.code !== 'auth/popup-closed-by-user' &&
-        err.code !== 'auth/no-current-user'
-      ) {
-        setError(err.message || 'Google sign-in failed');
-      }
-    });
-
-    return () => unsubscribe();
-  }, []); // eslint-disable-line
-
-  const handleGoogle = async () => {
-    // 1. Create provider immediately
-    const provider = new GoogleAuthProvider();
-    provider.setCustomParameters({ prompt: 'select_account' });
-
-    // 2. Call signInWithPopup SYNCHRONOUSLY before any React state updates.
-    // If we update state first, React 18 concurrent mode might decouple the 
-    // user click from the popup request, causing 'auth/popup-blocked'.
-    const popupPromise = signInWithPopup(auth, provider);
-
-    // 3. Now we can safely update UI state while the popup is opening
-    setLoading(true);
-    setError('');
-
-    try {
-      const result = await popupPromise;
+  getRedirectResult(auth)
+    .then((result) => {
+      console.log('📦 Redirect result:', result ? result.user.email : 'null');
       if (result?.user) onSuccess?.();
-    } catch (err) {
-      if (err.code === 'auth/popup-blocked') {
-        // Only if they manually block popups aggressively, fallback to redirect
-        try {
-          await signInWithRedirect(auth, provider);
-        } catch (redirectErr) {
-          setError(redirectErr.message || 'Google sign-in failed');
-          setLoading(false);
-        }
-      } else if (err.code !== 'auth/popup-closed-by-user') {
-        setError(err.message || 'Google sign-in failed');
-        setLoading(false);
-      } else {
-        // User closed popup
-        setLoading(false);
-      }
-    }
-  };
+    })
+    .catch((err) => {
+      console.log('❌ Redirect error:', err.code, err.message);
+    })
+    .finally(() => setLoading(false));
+}, []); 
 
+const handleGoogle = async () => {
+  const provider = new GoogleAuthProvider();
+  provider.setCustomParameters({ prompt: 'select_account' });
+  
+  setLoading(true);
+  setError('');
+
+  try {
+    const result = await signInWithPopup(auth, provider);
+    if (result?.user) onSuccess?.();
+  } catch (err) {
+    if (err.code === 'auth/popup-blocked') {
+      setError('Popup was blocked. Please allow popups for this site and try again.');
+    } else if (err.code !== 'auth/popup-closed-by-user') {
+      setError(err.message || 'Google sign-in failed');
+    }
+  } finally {
+    setLoading(false);
+  }
+};
   const setupRecaptcha = useCallback(() => {
     if (recaptchaWidgetRef.current) return;
     try {
