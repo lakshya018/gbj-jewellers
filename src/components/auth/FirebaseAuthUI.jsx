@@ -1,9 +1,10 @@
 'use client';
 
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback, useEffect } from 'react';
 import {
   GoogleAuthProvider,
-  signInWithPopup,
+  signInWithRedirect,
+  getRedirectResult,
   RecaptchaVerifier,
   signInWithPhoneNumber,
 } from 'firebase/auth';
@@ -19,18 +20,28 @@ export default function FirebaseAuthUI({ onSuccess }) {
   const confirmationRef = useRef(null);
   const recaptchaWidgetRef = useRef(null);
 
+  // Handle redirect result when returning from Google sign-in
+  useEffect(() => {
+    getRedirectResult(auth)
+      .then((result) => {
+        if (result?.user) {
+          onSuccess?.();
+        }
+      })
+      .catch((err) => {
+        setError(err.message || 'Google sign-in failed');
+      });
+  }, [onSuccess]);
+
   const handleGoogle = async () => {
     setError('');
     setLoading(true);
     try {
       const provider = new GoogleAuthProvider();
-      await signInWithPopup(auth, provider);
-      onSuccess?.();
+      await signInWithRedirect(auth, provider);
+      // Page will redirect — no code runs after this
     } catch (err) {
-      if (err.code !== 'auth/popup-closed-by-user') {
-        setError(err.message || 'Google sign-in failed');
-      }
-    } finally {
+      setError(err.message || 'Google sign-in failed');
       setLoading(false);
     }
   };
