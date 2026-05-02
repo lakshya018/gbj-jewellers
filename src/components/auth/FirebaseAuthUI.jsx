@@ -1,11 +1,9 @@
 'use client';
 
-import { useState, useRef, useCallback, useEffect } from 'react';
+import { useState, useRef, useCallback } from 'react';
 import {
   GoogleAuthProvider,
   signInWithPopup,
-  signInWithRedirect,
-  getRedirectResult,
   RecaptchaVerifier,
   signInWithPhoneNumber,
 } from 'firebase/auth';
@@ -21,49 +19,27 @@ export default function FirebaseAuthUI({ onSuccess }) {
   const confirmationRef = useRef(null);
   const recaptchaWidgetRef = useRef(null);
 
-  // In your useEffect — replace what you have
-  useEffect(() => {
-    auth.onAuthStateChanged(user => {
-      console.log('🔥 Auth state:', user ? user.email : 'null');
-    });
-
-    setLoading(true);
-    getRedirectResult(auth)
-      .then((result) => {
-        console.log('📦 Redirect result:', result?.user?.email ?? 'null');
-        if (result?.user) onSuccess?.();
-      })
-      .catch((err) => {
-        console.log('❌ Error:', err.code, err.message);
-        if (err.code !== 'auth/popup-closed-by-user') {
-          setError(err.message || 'Google sign-in failed');
-        }
-      })
-      .finally(() => setLoading(false));
-  }, []); // eslint-disable-line
-
-  const handleGoogle = async () => {
+  const handleGoogle = () => {
     const provider = new GoogleAuthProvider();
     provider.setCustomParameters({ prompt: 'select_account' });
 
+    // signInWithPopup must be called synchronously on the click event.
+    // Any state update or await before this causes browsers to treat
+    // the popup as not user-initiated and block it silently.
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        if (result?.user) onSuccess?.();
+      })
+      .catch((err) => {
+        if (err.code !== 'auth/popup-closed-by-user') {
+          setError('Sign-in failed. Make sure popups are allowed for this site.');
+        }
+      })
+      .finally(() => setLoading(false));
+
+    // Safe to update state now — popup is already opening
     setLoading(true);
     setError('');
-
-    try {
-      // Always use redirect in production, popup on localhost
-      if (window.location.hostname === 'localhost') {
-        const result = await signInWithPopup(auth, provider);
-        if (result?.user) onSuccess?.();
-      } else {
-        await signInWithRedirect(auth, provider);
-        // Page will redirect — no code runs after this
-      }
-    } catch (err) {
-      if (err.code !== 'auth/popup-closed-by-user') {
-        setError(err.message || 'Google sign-in failed');
-      }
-      setLoading(false);
-    }
   };
 
   const setupRecaptcha = useCallback(() => {
@@ -117,7 +93,6 @@ export default function FirebaseAuthUI({ onSuccess }) {
       {/* ── Main Buttons ── */}
       {mode === 'buttons' && (
         <div className="space-y-4">
-          {/* Google Button — Premium style */}
           <button
             onClick={handleGoogle}
             disabled={loading}
@@ -144,14 +119,12 @@ export default function FirebaseAuthUI({ onSuccess }) {
             )}
           </button>
 
-          {/* Divider */}
           <div className="flex items-center gap-4 py-1">
             <div className="flex-1 h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent"></div>
             <span className="text-[10px] font-bold tracking-[0.25em] uppercase text-gray-300">or</span>
             <div className="flex-1 h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent"></div>
           </div>
 
-          {/* Phone Button */}
           <button
             onClick={() => setMode('phone')}
             className="w-full flex items-center gap-4 py-4 px-5 rounded-2xl border-2 border-gray-100 hover:border-gray-200 hover:shadow-lg hover:shadow-black/5 transition-all duration-300 group"
@@ -167,7 +140,6 @@ export default function FirebaseAuthUI({ onSuccess }) {
             <ArrowRight size={16} className="text-gray-300 group-hover:text-gold-500 group-hover:translate-x-1 transition-all" />
           </button>
 
-          {/* Trust badges */}
           <div className="flex items-center justify-center gap-4 pt-2">
             <div className="flex items-center gap-1.5 text-[10px] text-gray-400">
               <ShieldCheck size={13} className="text-green-500" />
