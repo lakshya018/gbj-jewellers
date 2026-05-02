@@ -13,6 +13,8 @@ export const metadata = {
   description: 'Discover premium gold, diamond, and bridal jewellery at GBJ Jewellers. BIS Hallmarked 22KT gold. IGI certified diamonds. Free shipping on orders above ₹10,000.',
 };
 
+export const dynamic = 'force-dynamic';
+
 export default async function HomePage() {
   const trendingProducts = await getTrendingProducts(8);
   const banners = await getBanners();
