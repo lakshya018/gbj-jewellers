@@ -1,6 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import Image from 'next/image';
 import { ShieldCheck, Award, Gem, Users } from 'lucide-react';
 
 const pillars = [
@@ -36,11 +37,14 @@ export default function AboutSection() {
             >
               <div className="p-10 md:p-14">
                 {/* Monogram */}
-                <div
-                  className="w-16 h-16 rounded-full flex items-center justify-center mb-6"
-                  style={{ background: 'linear-gradient(135deg, #e6b84a, #a37820)' }}
-                >
-                  <span className="text-white font-serif font-bold text-2xl">G</span>
+                <div className="w-24 h-24 rounded-full flex items-center justify-center mb-6 overflow-hidden bg-white/10">
+                  <Image
+                    src="/images/gbj_logo.png"
+                    alt="GBJ Jewellers Logo"
+                    width={120}
+                    height={120}
+                    className="w-24 object-contain"
+                  />
                 </div>
 
                 <p className="text-[10px] tracking-[0.35em] uppercase text-gold-400 mb-3">

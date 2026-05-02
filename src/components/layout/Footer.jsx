@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { Instagram, Facebook, Twitter, Youtube, Mail, Phone, MapPin } from 'lucide-react';
 
 const footerLinks = {
@@ -39,17 +40,22 @@ export default function Footer() {
           {/* Brand Column */}
           <div className="lg:col-span-2">
             <Link href="/" className="inline-block mb-5">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-full flex items-center justify-center"
-                  style={{ background: 'linear-gradient(135deg, #e6b84a, #a37820)' }}>
-                  <span className="text-white font-serif font-bold text-xs">G</span>
+              <div className="flex items-center">
+                <Image
+                  src="/images/gbj_logo.png"
+                  alt="GBJ Jewellers Logo"
+                  width={120}
+                  height={120}
+                  className="w-24 object-contain"
+                />
+                <div className="flex flex-col -ml-3">
+                  <span className="font-serif font-bold text-2xl">
+                    GBJ <span className="text-gold-400">Jewellers</span>
+                  </span>
+                  <div className="text-[10px] tracking-[0.35em] uppercase text-gold-500 mt-0.5">
+                    Since 1925
+                  </div>
                 </div>
-                <span className="font-serif font-bold text-2xl">
-                  GBJ <span className="text-gold-400">Jewellers</span>
-                </span>
-              </div>
-              <div className="text-[10px] tracking-[0.35em] uppercase text-gold-500 pl-10 mt-0.5">
-                Since 1925
               </div>
             </Link>
 

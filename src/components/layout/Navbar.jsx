@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import { ShoppingBag, Heart, Search, Menu, X, ChevronDown, User } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -84,21 +85,27 @@ export default function Navbar() {
           <div className="flex items-center justify-between gap-4">
             {/* Logo */}
             <Link href="/" className="flex-shrink-0 group">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 bg-gold-gradient rounded-full flex items-center justify-center"
-                  style={{ background: 'linear-gradient(135deg, #e6b84a, #a37820)' }}>
-                  <span className="text-white font-serif font-bold text-xs">G</span>
+              <div className="flex items-center">
+                <Image
+                  src="/images/gbj_logo.png"
+                  alt="GBJ Jewellers Logo"
+                  width={120}
+                  height={120}
+                  className="w-24 object-contain"
+                  priority
+                />
+                <div className="flex flex-col -ml-3">
+                  <div>
+                    <span className={`font-serif font-bold text-xl tracking-wide transition-colors ${isSolid ? 'text-charcoal' : 'text-white'
+                      }`}>
+                      GBJ
+                    </span>
+                    <span className={`font-serif text-xl transition-colors ${isSolid ? 'text-gold-600' : 'text-gold-400'}`}> Jewellers</span>
+                  </div>
+                  <div className="text-[9px] tracking-[0.35em] uppercase text-gold-500 mt-0.5">
+                    Since 1925
+                  </div>
                 </div>
-                <div>
-                  <span className={`font-serif font-bold text-xl tracking-wide transition-colors ${isSolid ? 'text-charcoal' : 'text-white'
-                    }`}>
-                    GBJ
-                  </span>
-                  <span className={`font-serif text-xl transition-colors ${isSolid ? 'text-gold-600' : 'text-gold-400'}`}> Jewellers</span>
-                </div>
-              </div>
-              <div className="text-[9px] tracking-[0.35em] uppercase text-gold-500 pl-10 -mt-0.5">
-                Since 1925
               </div>
             </Link>
 
@@ -251,9 +258,20 @@ export default function Navbar() {
               className="fixed top-0 right-0 h-full w-72 bg-white z-50 flex flex-col lg:hidden"
             >
               <div className="flex items-center justify-between px-6 py-5 border-b border-gray-100">
-                <span className="font-serif text-xl text-charcoal">
-                  GBJ <span className="text-gold-500">Jewellers</span>
-                </span>
+                <div className="flex items-center">
+                  <Image
+                    src="/images/gbj_logo.png"
+                    alt="GBJ Jewellers Logo"
+                    width={120}
+                    height={120}
+                    className="w-24 object-contain"
+                  />
+                  <div className="flex flex-col -ml-3">
+                    <span className="font-serif text-xl text-charcoal">
+                      GBJ <span className="text-gold-500">Jewellers</span>
+                    </span>
+                  </div>
+                </div>
                 <button onClick={() => setMobileOpen(false)}>
                   <X size={20} className="text-charcoal" />
                 </button>

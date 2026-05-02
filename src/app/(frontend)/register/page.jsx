@@ -6,6 +6,7 @@ import { useAuth } from '@/context/AuthContext';
 import { motion } from 'framer-motion';
 import FirebaseAuthUI from '@/components/auth/FirebaseAuthUI';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function RegisterPage() {
   const { user } = useAuth();
@@ -27,9 +28,15 @@ export default function RegisterPage() {
 
         <div className="relative z-10 text-center px-12">
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
-            <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-8 ring-2 ring-gold-500/30 ring-offset-4 ring-offset-transparent"
-              style={{ background: 'linear-gradient(135deg, #e6b84a, #a37820)' }}>
-              <span className="text-white font-serif font-bold text-3xl">G</span>
+            <div className="w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-8 ring-2 ring-gold-500/30 ring-offset-4 ring-offset-transparent overflow-hidden bg-white">
+              <Image
+                src="/images/gbj_logo.png"
+                alt="GBJ Jewellers Logo"
+                width={120}
+                height={120}
+                className="w-24 object-contain"
+                priority
+              />
             </div>
             <h2 className="font-serif text-4xl text-white mb-4 leading-tight">
               Begin Your<br />
@@ -55,9 +62,15 @@ export default function RegisterPage() {
         <div className="max-w-md w-full">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
             <div className="lg:hidden text-center mb-8">
-              <div className="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4"
-                style={{ background: 'linear-gradient(135deg, #e6b84a, #a37820)' }}>
-                <span className="text-white font-serif font-bold text-xl">G</span>
+              <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 overflow-hidden bg-white shadow-md">
+                <Image
+                  src="/images/gbj_logo.png"
+                  alt="GBJ Jewellers Logo"
+                  width={120}
+                  height={120}
+                  className="w-24 object-contain"
+                  priority
+                />
               </div>
             </div>
 

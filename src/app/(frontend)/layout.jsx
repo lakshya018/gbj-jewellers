@@ -42,6 +42,10 @@ export const metadata = {
     follow: true,
     googleBot: { index: true, follow: true, 'max-image-preview': 'large' },
   },
+  icons: {
+    icon: '/images/gbj_favicon.png',
+    apple: '/images/gbj_favicon.png',
+  },
   verification: {
     // google: 'ADD_YOUR_GOOGLE_SEARCH_CONSOLE_VERIFICATION_TOKEN',
   },

@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Home, ShoppingBag, Phone } from 'lucide-react';
+import Image from 'next/image';
 
 const floatingGems = [
   { size: 10, x: '12%',  y: '20%', delay: 0 },
@@ -62,10 +63,15 @@ export default function NotFound() {
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           transition={{ type: 'spring', stiffness: 180, delay: 0.1 }}
-          className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-8"
-          style={{ background: 'linear-gradient(135deg, #e6b84a, #a37820)' }}
+          className="w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-8 overflow-hidden bg-white/10"
         >
-          <span className="text-white font-serif font-bold text-2xl">G</span>
+          <Image
+            src="/images/gbj_logo.png"
+            alt="GBJ Jewellers Logo"
+            width={120}
+            height={120}
+            className="w-24 object-contain"
+          />
         </motion.div>
 
         {/* 404 */}
