@@ -1,7 +1,7 @@
 import './globals.css';
 import { CartProvider } from '@/context/CartContext';
 import { WishlistProvider } from '@/context/WishlistContext';
-import { ClerkProvider } from '@clerk/nextjs';
+import { AuthProvider } from '@/context/AuthContext';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import WhatsAppButton from '@/components/ui/WhatsAppButton';
@@ -49,7 +49,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <ClerkProvider>
+    <AuthProvider>
       <html lang="en">
         <head>
           <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -66,6 +66,6 @@ export default function RootLayout({ children }) {
           </CartProvider>
         </body>
       </html>
-    </ClerkProvider>
+    </AuthProvider>
   );
 }

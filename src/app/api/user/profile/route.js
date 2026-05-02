@@ -1,25 +1,21 @@
 import { NextResponse } from 'next/server';
+import { verifyFirebaseToken } from '@/lib/firebase/admin';
 import { getPayload } from 'payload';
 import configPromise from '../../../../../payload.config';
-import { auth } from '@clerk/nextjs/server';
 
 export async function GET(req) {
   try {
-    const { userId } = await auth();
-    if (!userId) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    const decoded = await verifyFirebaseToken(req.headers.get('authorization'));
+    if (!decoded) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
     const payload = await getPayload({ config: configPromise });
-    
     const profileRes = await payload.find({
       collection: 'user-profiles',
-      where: { clerkUserId: { equals: userId } },
+      where: { firebaseUid: { equals: decoded.uid } },
       limit: 1,
     });
 
-    if (profileRes.docs.length === 0) {
-      return NextResponse.json({ savedAddresses: [] });
-    }
-
+    if (profileRes.docs.length === 0) return NextResponse.json({ savedAddresses: [] });
     return NextResponse.json(profileRes.docs[0]);
   } catch (err) {
     console.error('Profile GET Error:', err);
@@ -29,17 +25,15 @@ export async function GET(req) {
 
 export async function POST(req) {
   try {
-    const { userId } = await auth();
-    if (!userId) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    const decoded = await verifyFirebaseToken(req.headers.get('authorization'));
+    if (!decoded) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-    const body = await req.json();
-    const { savedAddresses } = body;
-    
+    const { savedAddresses } = await req.json();
     const payload = await getPayload({ config: configPromise });
 
     const profileRes = await payload.find({
       collection: 'user-profiles',
-      where: { clerkUserId: { equals: userId } },
+      where: { firebaseUid: { equals: decoded.uid } },
       limit: 1,
     });
 
@@ -53,10 +47,7 @@ export async function POST(req) {
     } else {
       const created = await payload.create({
         collection: 'user-profiles',
-        data: {
-          clerkUserId: userId,
-          savedAddresses,
-        },
+        data: { firebaseUid: decoded.uid, savedAddresses },
       });
       return NextResponse.json({ success: true, profileId: created.id });
     }

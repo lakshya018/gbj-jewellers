@@ -1,11 +1,12 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { UserButton, useUser } from '@clerk/nextjs';
-import { MapPin, Trash2, Plus, CheckCircle } from 'lucide-react';
+import { useAuth } from '@/context/AuthContext';
+import { MapPin, Trash2, Plus, CheckCircle, Loader2 } from 'lucide-react';
 
 export default function AddressBook() {
-  const { user, isLoaded: userLoaded } = useUser();
+  const { user, loading: authLoading, getToken } = useAuth();
+  const userLoaded = !authLoading;
   const [addresses, setAddresses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -13,7 +14,8 @@ export default function AddressBook() {
   useEffect(() => {
     if (userLoaded && user) {
       setLoading(true);
-      fetch('/api/user/profile')
+      getToken().then(token =>
+      fetch('/api/user/profile', { headers: token ? { Authorization: `Bearer ${token}` } : {} }))
         .then(res => res.json())
         .then(data => {
           if (data.savedAddresses) {
@@ -31,9 +33,10 @@ export default function AddressBook() {
     const newAddresses = addresses.filter((_, i) => i !== idx);
     setSaving(true);
     try {
+      const token = await getToken();
       const res = await fetch('/api/user/profile', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) },
         body: JSON.stringify({ savedAddresses: newAddresses }),
       });
       if (res.ok) {
@@ -53,9 +56,10 @@ export default function AddressBook() {
     }));
     setSaving(true);
     try {
+      const token = await getToken();
       const res = await fetch('/api/user/profile', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) },
         body: JSON.stringify({ savedAddresses: newAddresses }),
       });
       if (res.ok) {

@@ -1,146 +1,252 @@
-import { auth, currentUser } from '@clerk/nextjs/server';
-import { redirect } from 'next/navigation';
-import { getPayload } from 'payload';
-import configPromise from '../../../../payload.config';
+'use client';
+
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Package, Clock, CheckCircle, XCircle, MapPin } from 'lucide-react';
+import { Package, Clock, CheckCircle, Loader2, LogOut, Heart, ShoppingBag, MapPin, ChevronRight, Sparkles } from 'lucide-react';
+import { useAuth } from '@/context/AuthContext';
+import { useWishlist } from '@/context/WishlistContext';
+import { useCart } from '@/context/CartContext';
+import { motion } from 'framer-motion';
 import AddressBook from '@/components/account/AddressBook';
 
 function formatPrice(p) {
   return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(p);
 }
 
-export const metadata = {
-  title: 'My Account',
-};
+const fadeUp = { initial: { opacity: 0, y: 20 }, animate: { opacity: 1, y: 0 } };
 
-export default async function AccountPage() {
-  const { userId } = await auth();
-  if (!userId) {
-    return null; // Middleware will handle redirect
+export default function AccountPage() {
+  const { user, loading: authLoading, logout, getToken } = useAuth();
+  const { wishlistCount } = useWishlist();
+  const { cartCount } = useCart();
+  const router = useRouter();
+  const [orders, setOrders] = useState([]);
+  const [loadingOrders, setLoadingOrders] = useState(true);
+  const [activeTab, setActiveTab] = useState('orders');
+
+  useEffect(() => {
+    if (!authLoading && !user) router.push('/login');
+  }, [authLoading, user, router]);
+
+  useEffect(() => {
+    if (user) {
+      setLoadingOrders(true);
+      getToken().then(token => {
+        fetch('/api/orders', { headers: token ? { Authorization: `Bearer ${token}` } : {} })
+          .then(res => res.json())
+          .then(data => setOrders(data.orders || []))
+          .catch(err => console.error('Failed to load orders:', err))
+          .finally(() => setLoadingOrders(false));
+      });
+    }
+  }, [user]);
+
+  if (authLoading || !user) {
+    return (
+      <div className="min-h-screen bg-pearl flex items-center justify-center">
+        <Loader2 className="animate-spin text-gold-500" size={36} />
+      </div>
+    );
   }
 
-  const user = await currentUser();
-  const payload = await getPayload({ config: configPromise });
+  const firstName = user.displayName?.split(' ')[0] || 'there';
 
-  // Fetch orders
-  const ordersRes = await payload.find({
-    collection: 'orders',
-    where: { clerkUserId: { equals: userId } },
-    sort: '-createdAt',
-    depth: 2,
-  });
-
-  const orders = ordersRes.docs;
+  const tabs = [
+    { id: 'orders', label: 'Orders', icon: Package },
+    { id: 'addresses', label: 'Addresses', icon: MapPin },
+  ];
 
   return (
-    <div className="min-h-screen bg-pearl pt-24 pb-20 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-4xl mx-auto">
-        <div className="mb-10 text-center sm:text-left">
-          <p className="text-[10px] tracking-[0.3em] uppercase text-gold-600 mb-2">Welcome Back</p>
-          <h1 className="font-serif text-3xl sm:text-4xl font-bold text-charcoal">
-            {user.firstName ? `${user.firstName}'s Account` : 'My Account'}
-          </h1>
-          <p className="text-sm text-gray-500 mt-2">{user.primaryEmailAddress?.emailAddress}</p>
+    <div className="min-h-screen bg-pearl">
+      {/* ── Hero Profile Header ── */}
+      <div className="relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)' }}>
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] rounded-full opacity-10"
+          style={{ background: 'radial-gradient(circle, #e6b84a, transparent)' }} />
+        <div className="absolute bottom-0 left-1/4 w-72 h-72 rounded-full opacity-5"
+          style={{ background: 'radial-gradient(circle, #e6b84a, transparent)' }} />
+
+        <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-14">
+          <motion.div {...fadeUp} transition={{ duration: 0.5 }} className="flex flex-col sm:flex-row items-center sm:items-end gap-6">
+            {/* Avatar */}
+            <div className="relative">
+              {user.photoURL ? (
+                <img
+                  src={user.photoURL}
+                  alt={user.displayName || 'Profile'}
+                  className="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl object-cover ring-4 ring-gold-500/40 ring-offset-4 ring-offset-[#1a1a2e] shadow-2xl"
+                  referrerPolicy="no-referrer"
+                />
+              ) : (
+                <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl flex items-center justify-center text-white text-3xl font-serif font-bold ring-4 ring-gold-500/40 ring-offset-4 ring-offset-[#1a1a2e] shadow-2xl"
+                  style={{ background: 'linear-gradient(135deg, #e6b84a, #a37820)' }}>
+                  {firstName[0].toUpperCase()}
+                </div>
+              )}
+              <div className="absolute -bottom-1 -right-1 w-7 h-7 bg-green-500 rounded-lg ring-3 ring-[#1a1a2e] flex items-center justify-center">
+                <CheckCircle size={14} className="text-white" />
+              </div>
+            </div>
+
+            {/* Info */}
+            <div className="text-center sm:text-left flex-1">
+              <p className="text-[10px] tracking-[0.3em] uppercase text-gold-500 mb-1 font-semibold flex items-center justify-center sm:justify-start gap-1.5">
+                <Sparkles size={12} /> Welcome back
+              </p>
+              <h1 className="font-serif text-3xl sm:text-4xl text-white font-bold">
+                {user.displayName || 'My Account'}
+              </h1>
+              <p className="text-white/40 text-sm mt-1.5">{user.email || user.phoneNumber || ''}</p>
+            </div>
+
+            {/* Sign Out */}
+            <button
+              onClick={async () => { await logout(); router.push('/'); }}
+              className="flex items-center gap-2 px-5 py-2.5 border border-white/10 rounded-xl text-white/60 hover:text-white hover:border-white/30 hover:bg-white/5 transition-all text-xs font-bold tracking-widest uppercase"
+            >
+              <LogOut size={14} /> Sign Out
+            </button>
+          </motion.div>
+
+          {/* Quick Stats */}
+          <motion.div {...fadeUp} transition={{ duration: 0.5, delay: 0.15 }} className="grid grid-cols-3 gap-3 mt-8 max-w-md">
+            {[
+              { label: 'Orders', value: orders.length, icon: Package, href: '#orders' },
+              { label: 'Wishlist', value: wishlistCount, icon: Heart, href: '/wishlist' },
+              { label: 'Cart', value: cartCount, icon: ShoppingBag, href: '/cart' },
+            ].map((stat) => (
+              <Link key={stat.label} href={stat.href}
+                className="bg-white/5 border border-white/10 rounded-xl px-4 py-3 hover:bg-white/10 transition-all group">
+                <p className="text-2xl font-bold text-white">{stat.value}</p>
+                <p className="text-[10px] tracking-widest uppercase text-white/40 mt-0.5 flex items-center gap-1">
+                  <stat.icon size={10} /> {stat.label}
+                </p>
+              </Link>
+            ))}
+          </motion.div>
+        </div>
+      </div>
+
+      {/* ── Content Area ── */}
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 -mt-6 relative z-20 pb-20">
+        {/* Tab Switcher */}
+        <div className="bg-white rounded-2xl shadow-lg shadow-black/[0.03] border border-gray-100/80 p-1.5 flex gap-1 mb-6">
+          {tabs.map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-xs font-bold tracking-widest uppercase transition-all duration-300 ${
+                activeTab === tab.id
+                  ? 'bg-charcoal text-white shadow-md'
+                  : 'text-gray-400 hover:text-charcoal hover:bg-gray-50'
+              }`}
+            >
+              <tab.icon size={14} /> {tab.label}
+            </button>
+          ))}
         </div>
 
-        <div className="bg-white p-6 sm:p-8 shadow-sm">
-          <h2 className="font-serif text-xl font-bold text-charcoal border-b border-gray-100 pb-4 mb-6">
-            Order History
-          </h2>
-
-          {orders.length === 0 ? (
-            <div className="text-center py-10">
-              <Package size={48} className="mx-auto text-gray-300 mb-4" />
-              <p className="text-charcoal font-medium">You haven't placed any orders yet.</p>
-              <Link href="/products" className="inline-block mt-4 px-6 py-3 text-xs font-bold tracking-widest uppercase text-charcoal"
-                style={{ background: 'linear-gradient(135deg, #e6b84a, #a37820)' }}>
-                Start Shopping
-              </Link>
+        {/* Orders Tab */}
+        {activeTab === 'orders' && (
+          <motion.div {...fadeUp} transition={{ duration: 0.3 }}
+            className="bg-white rounded-2xl shadow-lg shadow-black/[0.03] border border-gray-100/80 overflow-hidden">
+            <div className="px-7 py-5 border-b border-gray-100">
+              <h2 className="font-serif text-xl font-bold text-charcoal">Order History</h2>
             </div>
-          ) : (
-            <div className="space-y-6">
-              {orders.map((order) => {
-                const isPaid = order.paymentStatus === 'paid' || order.paymentMethod === 'cod';
-                
-                return (
-                  <div key={order.id} className="border border-gray-100 p-5">
-                    {/* Order Header */}
-                    <div className="flex flex-wrap gap-4 items-center justify-between border-b border-gray-50 pb-4 mb-4">
-                      <div>
-                        <p className="text-[11px] font-bold tracking-widest uppercase text-gray-400">Order No.</p>
-                        <p className="text-sm font-semibold text-charcoal">{order.orderNumber}</p>
+
+            {loadingOrders ? (
+              <div className="text-center py-16">
+                <Loader2 className="animate-spin text-gold-500 mx-auto" size={28} />
+                <p className="text-sm text-gray-400 mt-3">Loading your orders...</p>
+              </div>
+            ) : orders.length === 0 ? (
+              <div className="text-center py-16 px-4">
+                <div className="w-16 h-16 rounded-2xl bg-gray-50 flex items-center justify-center mx-auto mb-4">
+                  <Package size={28} className="text-gray-300" />
+                </div>
+                <p className="text-charcoal font-semibold text-lg mb-1">No orders yet</p>
+                <p className="text-gray-400 text-sm mb-6">Start exploring our stunning collection</p>
+                <Link href="/products"
+                  className="inline-flex items-center gap-2 px-7 py-3 text-xs font-bold tracking-widest uppercase text-white rounded-xl shadow-lg hover:shadow-xl transition-all"
+                  style={{ background: 'linear-gradient(135deg, #e6b84a, #a37820)' }}>
+                  Browse Jewellery <ChevronRight size={14} />
+                </Link>
+              </div>
+            ) : (
+              <div className="divide-y divide-gray-50">
+                {orders.map((order) => {
+                  const isPaid = order.paymentStatus === 'paid' || order.paymentMethod === 'cod';
+                  return (
+                    <div key={order.id} className="px-7 py-5 hover:bg-gray-50/50 transition-colors">
+                      <div className="flex flex-wrap gap-4 items-center justify-between mb-4">
+                        <div className="flex items-center gap-4">
+                          <div className="w-10 h-10 rounded-xl bg-gray-100 flex items-center justify-center flex-shrink-0">
+                            <Package size={18} className="text-charcoal" />
+                          </div>
+                          <div>
+                            <p className="text-sm font-bold text-charcoal">{order.orderNumber}</p>
+                            <p className="text-[11px] text-gray-400">
+                              {new Date(order.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <p className="text-sm font-bold text-charcoal">{formatPrice(order.totalAmount)}</p>
+                          <div className={`px-3 py-1 text-[10px] font-bold uppercase tracking-wider rounded-full
+                            ${order.orderStatus === 'delivered' ? 'bg-green-50 text-green-600' :
+                              order.orderStatus === 'cancelled' ? 'bg-red-50 text-red-600' :
+                              'bg-amber-50 text-amber-600'}`}>
+                            {order.orderStatus}
+                          </div>
+                        </div>
                       </div>
-                      <div>
-                        <p className="text-[11px] font-bold tracking-widest uppercase text-gray-400">Date</p>
-                        <p className="text-sm font-semibold text-charcoal">
-                          {new Date(order.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
-                        </p>
+
+                      <div className="flex gap-2 overflow-x-auto pb-2">
+                        {order.items.slice(0, 4).map((item, idx) => {
+                          const product = item.product;
+                          const imageUrl = product?.images?.[0]?.image?.url || '/images/gold_collection.jpg';
+                          return (
+                            <Link key={idx} href={`/products/${product?.slug}`}
+                              className="relative w-14 h-14 bg-gray-100 rounded-lg flex-shrink-0 overflow-hidden hover:ring-2 hover:ring-gold-500/40 transition-all">
+                              <Image src={imageUrl} alt={product?.name || 'Product'} fill className="object-cover" />
+                            </Link>
+                          );
+                        })}
+                        {order.items.length > 4 && (
+                          <div className="w-14 h-14 rounded-lg bg-gray-50 flex items-center justify-center flex-shrink-0 text-xs font-bold text-gray-400">
+                            +{order.items.length - 4}
+                          </div>
+                        )}
                       </div>
-                      <div>
-                        <p className="text-[11px] font-bold tracking-widest uppercase text-gray-400">Total</p>
-                        <p className="text-sm font-semibold text-charcoal">{formatPrice(order.totalAmount)}</p>
-                      </div>
-                      <div>
-                        <div className={`flex items-center gap-1.5 px-3 py-1 text-[10px] font-bold uppercase tracking-wider rounded-full
-                          ${order.orderStatus === 'delivered' ? 'bg-green-50 text-green-600' :
-                            order.orderStatus === 'cancelled' ? 'bg-red-50 text-red-600' :
-                            'bg-gold-50 text-gold-600'}`}>
-                          {order.orderStatus}
+
+                      <div className="flex items-center justify-between mt-3 text-[11px]">
+                        <div className="flex items-center gap-1.5 text-gray-400">
+                          {isPaid ? <CheckCircle size={12} className="text-green-500" /> : <Clock size={12} className="text-amber-400" />}
+                          <span className="uppercase font-semibold">{order.paymentMethod}</span>
+                          <span>· {order.paymentStatus}</span>
                         </div>
                       </div>
                     </div>
+                  );
+                })}
+              </div>
+            )}
+          </motion.div>
+        )}
 
-                    {/* Order Items */}
-                    <div className="space-y-4">
-                      {order.items.map((item, idx) => {
-                        const product = item.product;
-                        const imageUrl = product?.images?.[0]?.image?.url || '/images/gold_collection.jpg';
-                        
-                        return (
-                          <div key={idx} className="flex gap-4 items-center">
-                            <div className="relative w-16 h-16 bg-gray-50 flex-shrink-0">
-                              <Image src={imageUrl} alt={product?.name || 'Product'} fill className="object-cover" />
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <p className="text-sm font-semibold text-charcoal line-clamp-1">
-                                <Link href={`/products/${product?.slug}`} className="hover:text-gold-500 transition-colors">
-                                  {product?.name || 'Unknown Product'}
-                                </Link>
-                              </p>
-                              <p className="text-xs text-gray-500">Qty: {item.quantity} {item.size ? `| Size: ${item.size}` : ''}</p>
-                            </div>
-                            <div className="text-right">
-                              <p className="text-sm font-semibold text-charcoal">{formatPrice(item.priceAtPurchase * item.quantity)}</p>
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-
-                    {/* Footer status */}
-                    <div className="mt-5 pt-4 border-t border-gray-50 flex items-center justify-between text-xs">
-                      <div className="flex items-center gap-1.5 text-gray-500">
-                        {isPaid ? <CheckCircle size={14} className="text-green-500" /> : <Clock size={14} className="text-orange-400" />}
-                        <span>Payment: <span className="uppercase font-semibold text-charcoal">{order.paymentMethod}</span> ({order.paymentStatus})</span>
-                      </div>
-                      
-                      {!isPaid && order.paymentMethod === 'razorpay' && order.paymentStatus === 'pending' && (
-                        <p className="text-orange-500 font-medium">Payment incomplete</p>
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
+        {/* Addresses Tab */}
+        {activeTab === 'addresses' && (
+          <motion.div {...fadeUp} transition={{ duration: 0.3 }}
+            className="bg-white rounded-2xl shadow-lg shadow-black/[0.03] border border-gray-100/80 overflow-hidden">
+            <div className="px-7 py-5 border-b border-gray-100">
+              <h2 className="font-serif text-xl font-bold text-charcoal">Saved Addresses</h2>
             </div>
-          )}
-        </div>
-
-        {/* Address Book Section */}
-        <div className="bg-white p-6 sm:p-8 shadow-sm mt-8">
-          <AddressBook />
-        </div>
+            <div className="p-7">
+              <AddressBook />
+            </div>
+          </motion.div>
+        )}
       </div>
     </div>
   );

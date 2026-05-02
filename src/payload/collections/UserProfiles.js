@@ -1,7 +1,7 @@
 export const UserProfiles = {
   slug: 'user-profiles',
   admin: {
-    useAsTitle: 'clerkUserId',
+    useAsTitle: 'firebaseUid',
   },
   access: {
     read: () => true,
@@ -11,7 +11,7 @@ export const UserProfiles = {
   },
   fields: [
     {
-      name: 'clerkUserId',
+      name: 'firebaseUid',
       type: 'text',
       required: true,
       unique: true,

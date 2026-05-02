@@ -1,7 +1,7 @@
 export const Carts = {
   slug: 'carts',
   admin: {
-    useAsTitle: 'clerkUserId',
+    useAsTitle: 'firebaseUid',
   },
   access: {
     read: () => true,
@@ -11,10 +11,9 @@ export const Carts = {
   },
   fields: [
     {
-      name: 'clerkUserId',
+      name: 'firebaseUid',
       type: 'text',
       required: true,
-      unique: true,
       index: true,
     },
     {
@@ -30,8 +29,7 @@ export const Carts = {
         {
           name: 'quantity',
           type: 'number',
-          required: true,
-          min: 1,
+          defaultValue: 1,
         },
         {
           name: 'size',

@@ -41,7 +41,4 @@ next-env.d.ts
 /payload-types.ts
 
 # Project specific
-gbj-jewellers.zip
-debug-db.js
-clear-db.js
-seed.js
+*.zip

@@ -1,33 +1,27 @@
 import { NextResponse } from 'next/server';
+import { verifyFirebaseToken } from '@/lib/firebase/admin';
 import { getPayload } from 'payload';
 import configPromise from '../../../../../payload.config';
-import { auth } from '@clerk/nextjs/server';
 
 export async function GET(req) {
   try {
-    const { userId } = await auth();
-    if (!userId) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    const decoded = await verifyFirebaseToken(req.headers.get('authorization'));
+    if (!decoded) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
     const payload = await getPayload({ config: configPromise });
-    
     const wishlistRes = await payload.find({
       collection: 'wishlists',
-      where: { clerkUserId: { equals: userId } },
+      where: { firebaseUid: { equals: decoded.uid } },
       limit: 1,
-      depth: 2, 
+      depth: 2,
     });
 
-    if (wishlistRes.docs.length === 0) {
-      return NextResponse.json({ items: [] });
-    }
+    if (wishlistRes.docs.length === 0) return NextResponse.json({ items: [] });
 
     const dbWishlist = wishlistRes.docs[0];
-    
-    // Format items to match what WishlistContext expects
     const formattedItems = (dbWishlist.items || []).map(item => {
       const p = item.product;
       if (!p) return null;
-      
       return {
         id: p.slug || p.id.toString(),
         name: p.name,
@@ -49,16 +43,15 @@ export async function GET(req) {
 
 export async function POST(req) {
   try {
-    const { userId } = await auth();
-    if (!userId) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    const decoded = await verifyFirebaseToken(req.headers.get('authorization'));
+    if (!decoded) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
     const { items } = await req.json();
-    
     const payload = await getPayload({ config: configPromise });
 
     const wishlistRes = await payload.find({
       collection: 'wishlists',
-      where: { clerkUserId: { equals: userId } },
+      where: { firebaseUid: { equals: decoded.uid } },
       limit: 1,
     });
 
@@ -71,9 +64,7 @@ export async function POST(req) {
     });
 
     const slugToDbId = {};
-    productsRes.docs.forEach(p => {
-      slugToDbId[p.slug] = p.id;
-    });
+    productsRes.docs.forEach(p => { slugToDbId[p.slug] = p.id; });
 
     const payloadItems = items.map(item => {
       const dbId = item.dbId || slugToDbId[item.id];
@@ -91,10 +82,7 @@ export async function POST(req) {
     } else {
       const created = await payload.create({
         collection: 'wishlists',
-        data: {
-          clerkUserId: userId,
-          items: payloadItems,
-        },
+        data: { firebaseUid: decoded.uid, items: payloadItems },
       });
       return NextResponse.json({ success: true, wishlistId: created.id });
     }

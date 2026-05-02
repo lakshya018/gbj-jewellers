@@ -1,14 +1,28 @@
 'use client';
 
 import { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import { useUser } from '@clerk/nextjs';
+import { useAuth } from '@/context/AuthContext';
 
 const WishlistContext = createContext(null);
 
 export function WishlistProvider({ children }) {
-  const { user, isLoaded } = useUser();
+  const { user, loading: authLoading, getToken } = useAuth();
+  const isLoaded = !authLoading;
   const [wishlist, setWishlist] = useState([]);
   const [initialized, setInitialized] = useState(false);
+
+  // Helper: authenticated fetch
+  const authFetch = async (url, options = {}) => {
+    const token = await getToken();
+    return fetch(url, {
+      ...options,
+      headers: {
+        ...options.headers,
+        'Content-Type': 'application/json',
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
+    });
+  };
 
   // Initialize and Sync
   useEffect(() => {
@@ -20,7 +34,7 @@ export function WishlistProvider({ children }) {
         const localWishlist = localStored ? JSON.parse(localStored) : [];
 
         if (user) {
-          const res = await fetch('/api/user/wishlist');
+          const res = await authFetch('/api/user/wishlist');
           if (res.ok) {
             const data = await res.json();
             let cloudWishlist = data.items || [];
@@ -29,14 +43,11 @@ export function WishlistProvider({ children }) {
               const merged = [...cloudWishlist];
               localWishlist.forEach((localItem) => {
                 const existing = merged.find((item) => item.id === localItem.id);
-                if (!existing) {
-                  merged.push(localItem);
-                }
+                if (!existing) merged.push(localItem);
               });
 
-              await fetch('/api/user/wishlist', {
+              await authFetch('/api/user/wishlist', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ items: merged }),
               });
 
@@ -64,9 +75,8 @@ export function WishlistProvider({ children }) {
     if (!initialized) return;
 
     if (user) {
-      fetch('/api/user/wishlist', {
+      authFetch('/api/user/wishlist', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ items: newWishlist }),
       }).catch((err) => console.error('Failed to sync wishlist:', err));
     } else {

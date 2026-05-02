@@ -1,15 +1,29 @@
 'use client';
 
 import { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import { useUser } from '@clerk/nextjs';
+import { useAuth } from '@/context/AuthContext';
 
 const CartContext = createContext(null);
 
 export function CartProvider({ children }) {
-  const { user, isLoaded } = useUser();
+  const { user, loading: authLoading, getToken } = useAuth();
+  const isLoaded = !authLoading;
   const [cartItems, setCartItems] = useState([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [initialized, setInitialized] = useState(false);
+
+  // Helper: authenticated fetch
+  const authFetch = async (url, options = {}) => {
+    const token = await getToken();
+    return fetch(url, {
+      ...options,
+      headers: {
+        ...options.headers,
+        'Content-Type': 'application/json',
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
+    });
+  };
 
   // Initialize and Sync
   useEffect(() => {
@@ -21,13 +35,11 @@ export function CartProvider({ children }) {
         const localCart = localStored ? JSON.parse(localStored) : [];
 
         if (user) {
-          // Fetch Cloud Cart
-          const res = await fetch('/api/user/cart');
+          const res = await authFetch('/api/user/cart');
           if (res.ok) {
             const data = await res.json();
             let cloudCart = data.items || [];
 
-            // Merge Local Cart into Cloud Cart if local cart has items
             if (localCart.length > 0) {
               const merged = [...cloudCart];
               localCart.forEach((localItem) => {
@@ -41,10 +53,8 @@ export function CartProvider({ children }) {
                 }
               });
 
-              // Save merged to Cloud
-              await fetch('/api/user/cart', {
+              await authFetch('/api/user/cart', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ items: merged }),
               });
 
@@ -54,7 +64,6 @@ export function CartProvider({ children }) {
             setCartItems(cloudCart);
           }
         } else {
-          // Guest User
           setCartItems(localCart);
         }
       } catch (err) {
@@ -73,9 +82,8 @@ export function CartProvider({ children }) {
     if (!initialized) return;
 
     if (user) {
-      fetch('/api/user/cart', {
+      authFetch('/api/user/cart', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ items: newCart }),
       }).catch((err) => console.error('Failed to sync cart:', err));
     } else {
@@ -94,8 +102,6 @@ export function CartProvider({ children }) {
               : item
           )
         : [...prev, { ...product, quantity, size }];
-      
-      // Async save
       setTimeout(() => saveCart(newCart), 0);
       return newCart;
     });
@@ -131,15 +137,8 @@ export function CartProvider({ children }) {
   return (
     <CartContext.Provider
       value={{
-        cartItems,
-        cartCount,
-        cartSubtotal,
-        isCartOpen,
-        setIsCartOpen,
-        addToCart,
-        removeFromCart,
-        updateQuantity,
-        clearCart,
+        cartItems, cartCount, cartSubtotal, isCartOpen, setIsCartOpen,
+        addToCart, removeFromCart, updateQuantity, clearCart,
         isSyncing: !initialized,
       }}
     >

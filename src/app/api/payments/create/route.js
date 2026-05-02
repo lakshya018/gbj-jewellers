@@ -1,24 +1,18 @@
 import { NextResponse } from 'next/server';
 import Razorpay from 'razorpay';
-import { auth } from '@clerk/nextjs/server';
+import { verifyFirebaseToken } from '@/lib/firebase/admin';
 import { getPayload } from 'payload';
 import configPromise from '../../../../../payload.config';
 
 export async function POST(req) {
   try {
-    const { userId } = await auth();
+    const decoded = await verifyFirebaseToken(req.headers.get('authorization'));
     const body = await req.json();
-    const { amount, receipt, items, address, paymentMethod } = body; 
-
-    const razorpay = new Razorpay({
-      key_id: process.env.RAZORPAY_KEY_ID || 'dummy_key',
-      key_secret: process.env.RAZORPAY_KEY_SECRET || 'dummy_secret',
-    });
+    const { amount, items, address, paymentMethod } = body;
 
     const payload = await getPayload({ config: configPromise });
 
-    // Format items for Payload
-    // Need to resolve slug to DB ID
+    // Resolve slugs to DB IDs
     const slugs = items.map(i => i.id);
     const productsRes = await payload.find({
       collection: 'products',
@@ -29,17 +23,17 @@ export async function POST(req) {
     productsRes.docs.forEach(p => { slugToDbId[p.slug] = p.id; });
 
     const payloadItems = items.map(item => ({
-      product: slugToDbId[item.id] || item.id,
+      product: slugToDbId[item.id] || item.dbId || item.id,
       quantity: item.quantity,
       size: item.size || null,
       priceAtPurchase: item.price,
     }));
 
     if (paymentMethod === 'cod') {
-      const payloadOrder = await payload.create({
+      const order = await payload.create({
         collection: 'orders',
         data: {
-          clerkUserId: userId || null,
+          firebaseUid: decoded?.uid || null,
           items: payloadItems,
           totalAmount: amount,
           paymentMethod: 'cod',
@@ -48,44 +42,44 @@ export async function POST(req) {
           shippingAddress: address,
         },
       });
-      return NextResponse.json({ success: true, orderId: payloadOrder.id }, { status: 200 });
-    } else {
-      // Razorpay
-      const options = {
-        amount: Math.round(amount * 100), // paise
+      return NextResponse.json({ success: true, orderId: order.id }, { status: 200 });
+    }
+
+    // Razorpay online payment
+    const razorpay = new Razorpay({
+      key_id: process.env.RAZORPAY_KEY_ID || 'dummy_key',
+      key_secret: process.env.RAZORPAY_KEY_SECRET || 'dummy_secret',
+    });
+
+    let rpOrder;
+    try {
+      rpOrder = await razorpay.orders.create({
+        amount: Math.round(amount * 100),
         currency: 'INR',
         receipt: `receipt_${Date.now()}`,
-      };
-
-      let rpOrder;
-      try {
-        rpOrder = await razorpay.orders.create(options);
-      } catch (rpErr) {
-        console.error('Razorpay SDK Error:', rpErr);
-        return NextResponse.json({ 
-          error: 'Razorpay order creation failed', 
-          details: typeof rpErr === 'object' ? JSON.stringify(rpErr) : String(rpErr)
-        }, { status: 500 });
-      }
-
-      const payloadOrder = await payload.create({
-        collection: 'orders',
-        data: {
-          clerkUserId: userId || null,
-          items: payloadItems,
-          totalAmount: amount,
-          paymentMethod: 'razorpay',
-          paymentStatus: 'pending',
-          orderStatus: 'processing',
-          shippingAddress: address,
-          razorpayOrderId: rpOrder.id,
-        },
       });
-
-      return NextResponse.json({ order: rpOrder, payloadOrderId: payloadOrder.id }, { status: 200 });
+    } catch (rpErr) {
+      console.error('Razorpay Error:', rpErr);
+      return NextResponse.json({ error: 'Razorpay order creation failed' }, { status: 500 });
     }
-  } catch (error) {
-    console.error('Order creation error:', error);
+
+    const order = await payload.create({
+      collection: 'orders',
+      data: {
+        firebaseUid: decoded?.uid || null,
+        items: payloadItems,
+        totalAmount: amount,
+        paymentMethod: 'razorpay',
+        paymentStatus: 'pending',
+        orderStatus: 'processing',
+        shippingAddress: address,
+        razorpayOrderId: rpOrder.id,
+      },
+    });
+
+    return NextResponse.json({ order: rpOrder, payloadOrderId: order.id }, { status: 200 });
+  } catch (err) {
+    console.error('Payment create error:', err);
     return NextResponse.json({ error: 'Order initialization failed' }, { status: 500 });
   }
 }

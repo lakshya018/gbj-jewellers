@@ -32,6 +32,9 @@ export default buildConfig({
     Users,
     {
       slug: 'media',
+      access: {
+        read: () => true,
+      },
       upload: {
         staticDir: 'public/media',
         staticURL: '/media',

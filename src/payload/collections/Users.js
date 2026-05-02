@@ -5,10 +5,8 @@ export const Users = {
     useAsTitle: 'email',
   },
   access: {
-    // Only admins can create/delete users
-    create: ({ req: { user } }) => user?.role === 'admin',
+    create: () => true, // Allow anyone to register (sign up)
     delete: ({ req: { user } }) => user?.role === 'admin',
-    // Users can read/update their own data, admins can do anything
     read: ({ req: { user } }) => {
       if (user?.role === 'admin') return true;
       return { id: { equals: user?.id } };
@@ -20,13 +18,23 @@ export const Users = {
   },
   fields: [
     {
+      name: 'firstName',
+      type: 'text',
+      required: true,
+    },
+    {
+      name: 'lastName',
+      type: 'text',
+      required: true,
+    },
+    {
       name: 'role',
       type: 'select',
-      defaultValue: 'admin', // Default to admin for the first user
+      defaultValue: 'user',
       required: true,
       options: [
         { label: 'Admin', value: 'admin' },
-        { label: 'Editor', value: 'editor' },
+        { label: 'User', value: 'user' },
       ],
       access: {
         update: ({ req: { user } }) => user?.role === 'admin',

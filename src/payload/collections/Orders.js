@@ -5,7 +5,7 @@ export const Orders = {
     defaultColumns: ['orderNumber', 'totalAmount', 'orderStatus', 'createdAt'],
   },
   access: {
-    read: ({ req: { user } }) => user?.role === 'admin',
+    read: () => true,
     create: () => true,
     update: ({ req: { user } }) => user?.role === 'admin',
     delete: ({ req: { user } }) => user?.role === 'admin',
@@ -21,12 +21,9 @@ export const Orders = {
       },
     },
     {
-      name: 'clerkUserId',
+      name: 'firebaseUid',
       type: 'text',
       index: true,
-      admin: {
-        description: 'Clerk User ID of the customer (empty for guest checkout)',
-      },
     },
     {
       name: 'items',

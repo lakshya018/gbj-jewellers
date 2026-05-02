@@ -7,7 +7,7 @@ import { ShoppingBag, Heart, Search, Menu, X, ChevronDown, User } from 'lucide-r
 import { motion, AnimatePresence } from 'framer-motion';
 import { useCart } from '@/context/CartContext';
 import { useWishlist } from '@/context/WishlistContext';
-import { UserButton, SignInButton, useAuth } from '@clerk/nextjs';
+import { useAuth } from '@/context/AuthContext';
 
 const navLinks = [
   { label: 'Home', href: '/' },
@@ -26,7 +26,6 @@ const collectionLinks = [
 ];
 
 export default function Navbar() {
-  const { isSignedIn } = useAuth();
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
@@ -49,6 +48,7 @@ export default function Navbar() {
   };
   const { cartCount } = useCart();
   const { wishlistCount } = useWishlist();
+  const { user } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 40);
@@ -190,16 +190,27 @@ export default function Navbar() {
 
               <div className="hidden sm:block border-l border-gray-200 h-6 mx-1" />
 
-              {isSignedIn ? (
+              {user ? (
                 <div className="flex items-center gap-3 ml-1">
-                  <Link href="/account" className={`hidden md:block text-[10px] font-bold tracking-widest uppercase hover:text-gold-500 transition-colors ${isSolid ? 'text-charcoal' : 'text-white'}`}>
-                    Account
+                  <Link href="/account" className="block">
+                    {user.photoURL ? (
+                      <img
+                        src={user.photoURL}
+                        alt={user.displayName || 'Account'}
+                        className="w-8 h-8 rounded-full object-cover ring-2 ring-gold-500 ring-offset-1 hover:ring-gold-400 transition-all"
+                        referrerPolicy="no-referrer"
+                      />
+                    ) : (
+                      <div className="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold ring-2 ring-gold-500 ring-offset-1"
+                        style={{ background: 'linear-gradient(135deg, #e6b84a, #a37820)' }}>
+                        {(user.displayName || user.email || '?')[0].toUpperCase()}
+                      </div>
+                    )}
                   </Link>
-                  <UserButton afterSignOutUrl="/" />
                 </div>
               ) : (
                 <Link
-                  href="/account"
+                  href="/login"
                   className={`p-2 transition-colors duration-300 rounded-full hover:bg-black/5
                     ${isSolid ? 'text-charcoal' : 'text-white'}`}
                   aria-label="Sign In"
@@ -256,6 +267,7 @@ export default function Navbar() {
                   { label: 'Bridal Collection', href: '/products?category=Bridal' },
                   { label: 'Everyday Wear', href: '/products?category=Everyday+Wear' },
                   { label: 'Cart', href: '/cart' },
+                  { label: user ? 'My Account' : 'Login', href: user ? '/account' : '/login' },
                 ].map((link) => (
                   <Link
                     key={link.href}

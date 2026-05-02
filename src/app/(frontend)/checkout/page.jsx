@@ -7,7 +7,7 @@ import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown, Shield, Truck, ArrowLeft, ArrowRight, CheckCircle, CreditCard, Smartphone, Banknote, MapPin } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
-import { useUser } from '@clerk/nextjs';
+import { useAuth } from '@/context/AuthContext';
 
 function formatPrice(p) {
   return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(p);
@@ -71,7 +71,8 @@ function StepBar({ step }) {
 
 export default function CheckoutPage() {
   const router = useRouter();
-  const { user, isLoaded: userLoaded } = useUser();
+  const { user, loading: authLoading, getToken } = useAuth();
+  const userLoaded = !authLoading;
   const { cartItems, cartSubtotal, clearCart } = useCart();
  
   const [step, setStep] = useState(0);
@@ -94,7 +95,8 @@ export default function CheckoutPage() {
   useEffect(() => {
     if (userLoaded && user) {
       setLoadingProfile(true);
-      fetch('/api/user/profile')
+      getToken().then(token =>
+      fetch('/api/user/profile', { headers: token ? { Authorization: `Bearer ${token}` } : {} }))
         .then(res => res.json())
         .then(data => {
           if (data.savedAddresses) {
@@ -112,6 +114,12 @@ export default function CheckoutPage() {
                 state: def.state,
                 pincode: def.pincode,
               });
+            } else if (user) {
+              setAddress(p => ({
+                ...p,
+                fullName: `${user.firstName} ${user.lastName}`,
+                email: user.email,
+              }));
             }
           }
         })
@@ -182,9 +190,10 @@ export default function CheckoutPage() {
   const placeOrder = async () => {
     setPlacing(true);
     try {
+      const token = await getToken();
       const res = await fetch('/api/payments/create', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) },
         body: JSON.stringify({
           amount: total,
           items: cartItems,
@@ -207,9 +216,10 @@ export default function CheckoutPage() {
         if (!isAlreadySaved) {
           const newSavedAddresses = [...savedAddresses, { ...address, label: address.city }];
           try {
+            const profileToken = await getToken();
             await fetch('/api/user/profile', {
               method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
+              headers: { 'Content-Type': 'application/json', ...(profileToken ? { Authorization: `Bearer ${profileToken}` } : {}) },
               body: JSON.stringify({ savedAddresses: newSavedAddresses }),
             });
           } catch (err) {

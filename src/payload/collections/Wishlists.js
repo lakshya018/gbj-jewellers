@@ -1,7 +1,7 @@
 export const Wishlists = {
   slug: 'wishlists',
   admin: {
-    useAsTitle: 'clerkUserId',
+    useAsTitle: 'firebaseUid',
   },
   access: {
     read: () => true,
@@ -11,10 +11,9 @@ export const Wishlists = {
   },
   fields: [
     {
-      name: 'clerkUserId',
+      name: 'firebaseUid',
       type: 'text',
       required: true,
-      unique: true,
       index: true,
     },
     {
