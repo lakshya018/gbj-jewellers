@@ -36,12 +36,12 @@ function FilterSidebar({ filters, setFilters, onClose, mobile, categories, types
       <div
         onClick={onChange}
         className={`w-4 h-4 border flex items-center justify-center flex-shrink-0 transition-all ${
-          checked ? 'bg-gold-500 border-gold-500' : 'border-gray-300 group-hover:border-gold-400'
+          checked ? 'bg-primary border-primary-hover' : 'border-gray-300 group-hover:border-primary'
         }`}
       >
-        {checked && <span className="text-white text-[9px]">✓</span>}
+        {checked && <span className="text-on-dark text-[9px]">✓</span>}
       </div>
-      <span className="text-sm text-charcoal group-hover:text-gold-600 transition-colors">{label}</span>
+      <span className="text-sm text-text group-hover:text-primary-hover transition-colors">{label}</span>
     </label>
   );
 
@@ -56,7 +56,7 @@ function FilterSidebar({ filters, setFilters, onClose, mobile, categories, types
 
       {/* Category */}
       <div className="mb-7">
-        <h4 className="text-[10px] font-bold tracking-[0.25em] uppercase text-gold-600 mb-3">Category</h4>
+        <h4 className="text-[10px] font-bold tracking-[0.25em] uppercase text-primary-hover mb-3">Category</h4>
         <div className="space-y-2.5">
           {categories.map((cat) => (
             <CheckItem
@@ -72,7 +72,7 @@ function FilterSidebar({ filters, setFilters, onClose, mobile, categories, types
 
       {/* Type */}
       <div className="mb-7">
-        <h4 className="text-[10px] font-bold tracking-[0.25em] uppercase text-gold-600 mb-3">Type</h4>
+        <h4 className="text-[10px] font-bold tracking-[0.25em] uppercase text-primary-hover mb-3">Type</h4>
         <div className="space-y-2.5">
           {types.map((t) => (
             <CheckItem
@@ -88,7 +88,7 @@ function FilterSidebar({ filters, setFilters, onClose, mobile, categories, types
 
       {/* Price Range */}
       <div className="mb-7">
-        <h4 className="text-[10px] font-bold tracking-[0.25em] uppercase text-gold-600 mb-3">Price Range</h4>
+        <h4 className="text-[10px] font-bold tracking-[0.25em] uppercase text-primary-hover mb-3">Price Range</h4>
         <div className="space-y-2.5">
           {priceRanges.map((range) => (
             <label key={range.label} className="flex items-center gap-2.5 cursor-pointer group">
@@ -97,9 +97,9 @@ function FilterSidebar({ filters, setFilters, onClose, mobile, categories, types
                 name="priceRange"
                 checked={filters.priceRange?.label === range.label}
                 onChange={() => setFilters((p) => ({ ...p, priceRange: range }))}
-                className="accent-gold-500"
+                className="accent-primary"
               />
-              <span className="text-sm text-charcoal group-hover:text-gold-600 transition-colors">
+              <span className="text-sm text-text group-hover:text-primary-hover transition-colors">
                 {range.label}
               </span>
             </label>
@@ -107,7 +107,7 @@ function FilterSidebar({ filters, setFilters, onClose, mobile, categories, types
           {filters.priceRange && (
             <button
               onClick={() => setFilters((p) => ({ ...p, priceRange: null }))}
-              className="text-xs text-gold-500 hover:underline"
+              className="text-xs text-primary hover:underline"
             >
               Clear price filter
             </button>
@@ -118,7 +118,7 @@ function FilterSidebar({ filters, setFilters, onClose, mobile, categories, types
 
       {/* Purity */}
       <div className="mb-7">
-        <h4 className="text-[10px] font-bold tracking-[0.25em] uppercase text-gold-600 mb-3">Purity</h4>
+        <h4 className="text-[10px] font-bold tracking-[0.25em] uppercase text-primary-hover mb-3">Purity</h4>
         <div className="space-y-2.5">
           {purities.map((p) => (
             <CheckItem
@@ -134,7 +134,7 @@ function FilterSidebar({ filters, setFilters, onClose, mobile, categories, types
       {/* Reset */}
       <button
         onClick={() => setFilters({ categories: new Set(), types: new Set(), purities: new Set(), priceRange: null })}
-        className="w-full border border-charcoal text-charcoal text-xs font-semibold tracking-widest uppercase py-2.5 hover:bg-charcoal hover:text-white transition-all duration-300"
+        className="w-full border border-text text-text text-xs font-semibold tracking-widest uppercase py-2.5 hover:bg-surface-dark hover:text-on-dark transition-all duration-300"
       >
         Clear All Filters
       </button>
@@ -215,14 +215,14 @@ function ProductsContent({ products, categories, types, purities }) {
     filters.categories.size + filters.types.size + filters.purities.size + (filters.priceRange ? 1 : 0);
 
   return (
-    <div className="min-h-screen bg-pearl pt-24">
-      <div className="bg-charcoal py-12 px-4">
+    <div className="min-h-screen bg-bg pt-24">
+      <div className="bg-surface-dark py-12 px-4">
         <div className="max-w-7xl mx-auto text-center">
-          <p className="text-[10px] tracking-[0.35em] uppercase text-gold-400 mb-2">Our Catalogue</p>
-          <h1 className="font-serif text-3xl md:text-4xl font-bold text-white mb-2">
+          <p className="text-[10px] tracking-[0.35em] uppercase text-accent mb-2">Our Catalogue</p>
+          <h1 className="font-serif text-3xl md:text-4xl font-bold text-on-dark mb-2">
             {initialCategory || 'All Collections'}
           </h1>
-          <p className="text-sm text-gray-400">
+          <p className="text-sm text-muted">
             {filtered.length} {filtered.length === 1 ? 'piece' : 'pieces'} curated for you
           </p>
         </div>
@@ -233,30 +233,30 @@ function ProductsContent({ products, categories, types, purities }) {
           <button
             id="mobile-filter-btn"
             onClick={() => setMobileFiltersOpen(true)}
-            className="flex items-center gap-2 border border-charcoal px-4 py-2.5 text-xs font-semibold tracking-widest uppercase"
+            className="flex items-center gap-2 border border-text px-4 py-2.5 text-xs font-semibold tracking-widest uppercase"
           >
             <SlidersHorizontal size={14} />
-            Filters {activeFilterCount > 0 && <span className="bg-gold-500 text-white text-[9px] w-4 h-4 rounded-full flex items-center justify-center">{activeFilterCount}</span>}
+            Filters {activeFilterCount > 0 && <span className="bg-primary text-on-dark text-[9px] w-4 h-4 rounded-full flex items-center justify-center">{activeFilterCount}</span>}
           </button>
           <div className="relative flex-1">
             <select
               value={sort}
               onChange={(e) => setSort(e.target.value)}
-              className="w-full border border-gray-200 px-3 py-2.5 text-xs appearance-none bg-white pr-8"
+              className="w-full border border-border px-3 py-2.5 text-xs appearance-none bg-card pr-8"
             >
               {sortOptions.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
             </select>
-            <ChevronDown size={12} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+            <ChevronDown size={12} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted pointer-events-none" />
           </div>
         </div>
 
         <div className="flex gap-8">
           <aside className="hidden lg:block w-56 flex-shrink-0">
-            <div className="bg-white p-6">
+            <div className="bg-card p-6">
               <div className="flex items-center justify-between mb-6">
-                <h3 className="font-serif text-base font-bold text-charcoal">Filters</h3>
+                <h3 className="font-serif text-base font-bold text-text">Filters</h3>
                 {activeFilterCount > 0 && (
-                  <span className="text-[10px] text-gold-500 font-semibold">{activeFilterCount} active</span>
+                  <span className="text-[10px] text-primary font-semibold">{activeFilterCount} active</span>
                 )}
               </div>
               <FilterSidebar 
@@ -272,24 +272,24 @@ function ProductsContent({ products, categories, types, purities }) {
           <div className="flex-1">
             <div className="hidden lg:flex items-center gap-4 mb-6">
               <div className="relative flex-1 max-w-xs">
-                <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
                 <input
                   type="text"
                   placeholder="Search products..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className="w-full pl-9 pr-4 py-2.5 border border-gray-200 bg-white text-sm focus:outline-none focus:border-gold-400"
+                  className="w-full pl-9 pr-4 py-2.5 border border-border bg-card text-sm focus:outline-none focus:border-primary"
                 />
               </div>
               <div className="ml-auto relative">
                 <select
                   value={sort}
                   onChange={(e) => setSort(e.target.value)}
-                  className="border border-gray-200 bg-white px-4 py-2.5 text-xs appearance-none pr-8 cursor-pointer focus:outline-none focus:border-gold-400"
+                  className="border border-border bg-card px-4 py-2.5 text-xs appearance-none pr-8 cursor-pointer focus:outline-none focus:border-primary"
                 >
                   {sortOptions.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
                 </select>
-                <ChevronDown size={12} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+                <ChevronDown size={12} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted pointer-events-none" />
               </div>
             </div>
 
@@ -299,7 +299,7 @@ function ProductsContent({ products, categories, types, purities }) {
                   <button
                     key={c}
                     onClick={() => setFilters((p) => { const s = new Set(p.categories); s.delete(c); return { ...p, categories: s }; })}
-                    className="flex items-center gap-1.5 bg-gold-100 text-gold-800 text-[11px] font-medium px-3 py-1.5"
+                    className="flex items-center gap-1.5 bg-primary/10 text-primary-hover text-[11px] font-medium px-3 py-1.5"
                   >
                     {c} <X size={10} />
                   </button>
@@ -308,7 +308,7 @@ function ProductsContent({ products, categories, types, purities }) {
                   <button
                     key={t}
                     onClick={() => setFilters((p) => { const s = new Set(p.types); s.delete(t); return { ...p, types: s }; })}
-                    className="flex items-center gap-1.5 bg-gold-100 text-gold-800 text-[11px] font-medium px-3 py-1.5"
+                    className="flex items-center gap-1.5 bg-primary/10 text-primary-hover text-[11px] font-medium px-3 py-1.5"
                   >
                     {t} <X size={10} />
                   </button>
@@ -317,7 +317,7 @@ function ProductsContent({ products, categories, types, purities }) {
                   <button
                     key={p}
                     onClick={() => setFilters((prev) => { const s = new Set(prev.purities); s.delete(p); return { ...prev, purities: s }; })}
-                    className="flex items-center gap-1.5 bg-gold-100 text-gold-800 text-[11px] font-medium px-3 py-1.5"
+                    className="flex items-center gap-1.5 bg-primary/10 text-primary-hover text-[11px] font-medium px-3 py-1.5"
                   >
                     {p} <X size={10} />
                   </button>
@@ -325,7 +325,7 @@ function ProductsContent({ products, categories, types, purities }) {
                 {filters.priceRange && (
                   <button
                     onClick={() => setFilters((p) => ({ ...p, priceRange: null }))}
-                    className="flex items-center gap-1.5 bg-gold-100 text-gold-800 text-[11px] font-medium px-3 py-1.5"
+                    className="flex items-center gap-1.5 bg-primary/10 text-primary-hover text-[11px] font-medium px-3 py-1.5"
                   >
                     {filters.priceRange.label} <X size={10} />
                   </button>
@@ -340,8 +340,8 @@ function ProductsContent({ products, categories, types, purities }) {
             ) : filtered.length === 0 ? (
               <div className="text-center py-24">
                 <div className="text-5xl mb-4">◇</div>
-                <h3 className="font-serif text-2xl font-bold text-charcoal mb-2">No pieces found</h3>
-                <p className="text-sm text-gray-500 mb-6">Try adjusting your filters or search term.</p>
+                <h3 className="font-serif text-2xl font-bold text-text mb-2">No pieces found</h3>
+                <p className="text-sm text-muted mb-6">Try adjusting your filters or search term.</p>
                 <button
                   onClick={() => { setFilters({ categories: new Set(), types: new Set(), purities: new Set(), priceRange: null }); setSearch(''); }}
                   className="btn-gold-outline"
@@ -385,7 +385,7 @@ function ProductsContent({ products, categories, types, purities }) {
             <motion.div
               initial={{ x: '-100%' }} animate={{ x: 0 }} exit={{ x: '-100%' }}
               transition={{ type: 'tween', duration: 0.3 }}
-              className="fixed top-0 left-0 h-full w-72 bg-white z-50 overflow-y-auto"
+              className="fixed top-0 left-0 h-full w-72 bg-card z-50 overflow-y-auto"
             >
               <FilterSidebar
                 filters={filters}
@@ -406,7 +406,7 @@ function ProductsContent({ products, categories, types, purities }) {
 
 export default function ProductsClient({ products, categories, types, purities }) {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-pearl pt-24 flex items-center justify-center"><div className="text-gold-500 font-serif text-xl">Loading...</div></div>}>
+    <Suspense fallback={<div className="min-h-screen bg-bg pt-24 flex items-center justify-center"><div className="text-primary font-serif text-xl">Loading...</div></div>}>
       <ProductsContent products={products} categories={categories} types={types} purities={purities} />
     </Suspense>
   );

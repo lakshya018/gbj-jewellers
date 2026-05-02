@@ -17,8 +17,8 @@ export default function OrderConfirmationPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-pearl pt-20 flex flex-col items-center justify-center px-4">
-      <div className="max-w-lg w-full bg-white p-8 sm:p-12 text-center">
+    <div className="min-h-screen bg-bg pt-20 flex flex-col items-center justify-center px-4">
+      <div className="max-w-lg w-full bg-card p-8 sm:p-12 text-center">
 
         {/* Animated checkmark */}
         <motion.div
@@ -31,7 +31,7 @@ export default function OrderConfirmationPage() {
             className="w-20 h-20 rounded-full flex items-center justify-center"
             style={{ background: 'linear-gradient(135deg, #e6b84a, #a37820)' }}
           >
-            <CheckCircle size={36} className="text-white" />
+            <CheckCircle size={36} className="text-on-dark" />
           </div>
         </motion.div>
 
@@ -41,13 +41,13 @@ export default function OrderConfirmationPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3, duration: 0.5 }}
         >
-          <p className="text-[10px] tracking-[0.35em] uppercase text-gold-600 mb-2">
+          <p className="text-[10px] tracking-[0.35em] uppercase text-primary-hover mb-2">
             Order Confirmed
           </p>
-          <h1 className="font-serif text-3xl sm:text-4xl font-bold text-charcoal mb-3">
+          <h1 className="font-serif text-3xl sm:text-4xl font-bold text-text mb-3">
             Thank You!
           </h1>
-          <p className="text-gray-500 text-sm leading-relaxed mb-6">
+          <p className="text-muted text-sm leading-relaxed mb-6">
             Your order has been placed successfully. Our team will reach out to confirm
             delivery details and keep you updated.
           </p>
@@ -58,15 +58,15 @@ export default function OrderConfirmationPage() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5, duration: 0.5 }}
-          className="bg-pearl border border-gray-100 px-6 py-4 mb-8"
+          className="bg-bg border border-border px-6 py-4 mb-8"
         >
-          <p className="text-[10px] tracking-[0.3em] uppercase text-gray-400 mb-1">
+          <p className="text-[10px] tracking-[0.3em] uppercase text-muted mb-1">
             Order ID
           </p>
-          <p className="font-serif text-xl font-bold text-charcoal tracking-widest">
+          <p className="font-serif text-xl font-bold text-text tracking-widest">
             #{orderId}
           </p>
-          <p className="text-[11px] text-gray-400 mt-1">
+          <p className="text-[11px] text-muted mt-1">
             Save this for your records
           </p>
         </motion.div>
@@ -78,7 +78,7 @@ export default function OrderConfirmationPage() {
           transition={{ delay: 0.6, duration: 0.5 }}
           className="text-left mb-8 space-y-3"
         >
-          <p className="text-[10px] tracking-[0.3em] uppercase text-gold-600 font-bold">
+          <p className="text-[10px] tracking-[0.3em] uppercase text-primary-hover font-bold">
             What Happens Next
           </p>
           {[
@@ -88,12 +88,12 @@ export default function OrderConfirmationPage() {
           ].map(({ step, text }) => (
             <div key={step} className="flex items-start gap-3">
               <div
-                className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 text-[10px] font-bold text-white mt-0.5"
+                className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 text-[10px] font-bold text-on-dark mt-0.5"
                 style={{ background: 'linear-gradient(135deg, #e6b84a, #a37820)' }}
               >
                 {step}
               </div>
-              <p className="text-sm text-gray-500 leading-relaxed">{text}</p>
+              <p className="text-sm text-muted leading-relaxed">{text}</p>
             </div>
           ))}
         </motion.div>
@@ -103,15 +103,15 @@ export default function OrderConfirmationPage() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.8, duration: 0.5 }}
-          className="border border-gray-100 px-5 py-4 flex items-center gap-3 mb-8"
+          className="border border-border px-5 py-4 flex items-center gap-3 mb-8"
         >
           <div className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0"
             style={{ background: 'linear-gradient(135deg, #e6b84a, #a37820)' }}>
-            <Phone size={14} className="text-white" />
+            <Phone size={14} className="text-on-dark" />
           </div>
           <div className="text-left">
-            <p className="text-xs font-semibold text-charcoal">Have a question?</p>
-            <p className="text-[11px] text-gray-400">Call us at <span className="text-charcoal font-medium">+91 98765 43210</span></p>
+            <p className="text-xs font-semibold text-text">Have a question?</p>
+            <p className="text-[11px] text-muted">Call us at <span className="text-text font-medium">+91 98765 43210</span></p>
           </div>
         </motion.div>
 
@@ -125,7 +125,7 @@ export default function OrderConfirmationPage() {
           <Link
             href="/products"
             className="flex-1 flex items-center justify-center gap-2 py-3.5 text-xs font-bold
-                       tracking-widest uppercase text-charcoal transition-all hover:opacity-90"
+                       tracking-widest uppercase text-surface-dark transition-all hover:opacity-90"
             style={{ background: 'linear-gradient(135deg, #e6b84a, #a37820)' }}
           >
             <ShoppingBag size={14} /> Continue Shopping
@@ -133,8 +133,8 @@ export default function OrderConfirmationPage() {
           <Link
             href="/"
             className="flex-1 flex items-center justify-center gap-2 py-3.5 text-xs font-bold
-                       tracking-widest uppercase text-charcoal border border-charcoal
-                       hover:bg-charcoal hover:text-white transition-all duration-300"
+                       tracking-widest uppercase text-text border border-text
+                       hover:bg-surface-dark hover:text-on-dark transition-all duration-300"
           >
             <Home size={14} /> Back to Home
           </Link>

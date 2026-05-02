@@ -55,7 +55,7 @@ export default function ContactSection() {
   };
 
   return (
-    <section id="contact" className="bg-pearl py-20 overflow-hidden">
+    <section id="contact" className="bg-bg py-20 overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* Header */}
@@ -66,13 +66,13 @@ export default function ContactSection() {
           transition={{ duration: 0.6 }}
           className="text-center mb-14"
         >
-          <p className="text-[10px] tracking-[0.35em] uppercase text-gold-600 mb-3">
+          <p className="text-[10px] tracking-[0.35em] uppercase text-primary-hover mb-3">
             Get In Touch
           </p>
-          <h2 className="font-serif text-3xl md:text-4xl font-bold text-charcoal mb-3">
+          <h2 className="font-serif text-3xl md:text-4xl font-bold text-text mb-3">
             We&apos;d Love to Hear From You
           </h2>
-          <p className="text-sm text-gray-500 max-w-md mx-auto">
+          <p className="text-sm text-muted max-w-md mx-auto">
             Whether you have a custom order in mind or a question about our jewellery,
             our team is here to help.
           </p>
@@ -98,22 +98,22 @@ export default function ContactSection() {
                 <Wrapper
                   key={label}
                   {...wrapperProps}
-                  className="group flex items-start gap-5 bg-white p-5 border border-gray-100
-                             hover:border-gold-300 hover:shadow-sm transition-all duration-300"
+                  className="group flex items-start gap-5 bg-card p-5 border border-border
+                    hover:border-primary dark:hover:border-primary-hover transition-all duration-300"
                 >
                   <div
                     className="w-11 h-11 rounded-full flex items-center justify-center flex-shrink-0
                                 group-hover:scale-110 transition-transform duration-300"
                     style={{ background: 'linear-gradient(135deg, #e6b84a, #a37820)' }}
                   >
-                    <Icon size={16} className="text-white" />
+                    <Icon size={16} className="text-on-dark" />
                   </div>
                   <div>
-                    <p className="text-[10px] tracking-[0.2em] uppercase text-gold-600 font-semibold mb-0.5">
+                    <p className="text-[10px] tracking-[0.2em] uppercase text-primary-hover font-semibold mb-0.5">
                       {label}
                     </p>
-                    <p className="text-charcoal font-medium text-sm">{value}</p>
-                    <p className="text-gray-400 text-xs mt-0.5">{sub}</p>
+                    <p className="text-text font-medium text-sm">{value}</p>
+                    <p className="text-muted text-xs mt-0.5">{sub}</p>
                   </div>
                 </Wrapper>
               );
@@ -124,7 +124,7 @@ export default function ContactSection() {
               href="https://maps.google.com/?q=Nawa+City+Nagaur+Rajasthan"
               target="_blank"
               rel="noopener noreferrer"
-              className="block relative overflow-hidden border border-gray-100 hover:border-gold-300
+              className="block relative overflow-hidden border border-border hover:border-primary
                          transition-all duration-300 group"
               style={{ height: '160px' }}
             >
@@ -140,10 +140,10 @@ export default function ContactSection() {
                               group-hover:scale-110 transition-transform duration-300"
                   style={{ background: 'linear-gradient(135deg, #e6b84a, #a37820)' }}
                 >
-                  <MapPin size={18} className="text-white" />
+                  <MapPin size={18} className="text-on-dark" />
                 </div>
-                <p className="text-white text-sm font-medium">Nawa City, Nagaur, Rajasthan</p>
-                <p className="text-gold-400 text-xs tracking-widest uppercase">
+                <p className="text-on-dark text-sm font-medium">Nawa City, Nagaur, Rajasthan</p>
+                <p className="text-accent text-xs tracking-widest uppercase">
                   Open in Google Maps →
                 </p>
               </div>
@@ -156,7 +156,7 @@ export default function ContactSection() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.1 }}
-            className="bg-white border border-gray-100 p-8"
+            className="bg-card border border-border p-8"
           >
             {submitted ? (
               <div className="h-full flex flex-col items-center justify-center text-center py-10 gap-4">
@@ -165,17 +165,17 @@ export default function ContactSection() {
                   animate={{ scale: 1 }}
                   transition={{ type: 'spring', stiffness: 200 }}
                 >
-                  <CheckCircle size={48} className="text-gold-500" />
+                  <CheckCircle size={48} className="text-primary" />
                 </motion.div>
-                <h3 className="font-serif text-2xl font-bold text-charcoal">
+                <h3 className="font-serif text-2xl font-bold text-text">
                   Message Received!
                 </h3>
-                <p className="text-sm text-gray-500 max-w-xs">
+                <p className="text-sm text-muted max-w-xs">
                   Thank you for reaching out. Our team will get back to you within 24 hours.
                 </p>
                 <button
                   onClick={() => { setSubmitted(false); setForm({ name: '', phone: '', message: '' }); }}
-                  className="mt-2 text-xs text-gold-500 hover:underline tracking-widest uppercase"
+                  className="mt-2 text-xs text-primary hover:underline tracking-widest uppercase"
                 >
                   Send Another Message
                 </button>
@@ -183,10 +183,10 @@ export default function ContactSection() {
             ) : (
               <>
                 <div className="mb-7">
-                  <p className="text-[10px] tracking-[0.35em] uppercase text-gold-600 mb-1">
+                  <p className="text-[10px] tracking-[0.35em] uppercase text-primary-hover mb-1">
                     Enquiry Form
                   </p>
-                  <h3 className="font-serif text-xl font-bold text-charcoal">
+                  <h3 className="font-serif text-xl font-bold text-text">
                     Send Us a Message
                   </h3>
                 </div>
@@ -194,8 +194,8 @@ export default function ContactSection() {
                 <form onSubmit={handleSubmit} className="space-y-5">
                   {/* Name */}
                   <div>
-                    <label className="block text-xs font-semibold text-charcoal tracking-wider uppercase mb-1.5">
-                      Full Name <span className="text-gold-500">*</span>
+                    <label className="block text-xs font-semibold text-text tracking-wider uppercase mb-1.5">
+                      Full Name <span className="text-primary">*</span>
                     </label>
                     <input
                       type="text"
@@ -204,16 +204,16 @@ export default function ContactSection() {
                       onChange={handleChange}
                       placeholder="Your name"
                       required
-                      className="w-full border border-gray-200 px-4 py-3 text-sm text-charcoal
-                                 placeholder-gray-400 focus:outline-none focus:border-gold-400
-                                 transition-colors bg-pearl"
+                      className="w-full border border-border px-4 py-3 text-sm text-text
+                                 placeholder-gray-400 focus:outline-none focus:border-primary
+                                 transition-colors bg-bg"
                     />
                   </div>
 
                   {/* Phone */}
                   <div>
-                    <label className="block text-xs font-semibold text-charcoal tracking-wider uppercase mb-1.5">
-                      Phone Number <span className="text-gold-500">*</span>
+                    <label className="block text-xs font-semibold text-text tracking-wider uppercase mb-1.5">
+                      Phone Number <span className="text-primary">*</span>
                     </label>
                     <input
                       type="tel"
@@ -222,16 +222,16 @@ export default function ContactSection() {
                       onChange={handleChange}
                       placeholder="+91 XXXXX XXXXX"
                       required
-                      className="w-full border border-gray-200 px-4 py-3 text-sm text-charcoal
-                                 placeholder-gray-400 focus:outline-none focus:border-gold-400
-                                 transition-colors bg-pearl"
+                      className="w-full border border-border px-4 py-3 text-sm text-text
+                                 placeholder-gray-400 focus:outline-none focus:border-primary
+                                 transition-colors bg-bg"
                     />
                   </div>
 
                   {/* Message */}
                   <div>
-                    <label className="block text-xs font-semibold text-charcoal tracking-wider uppercase mb-1.5">
-                      Message <span className="text-gold-500">*</span>
+                    <label className="block text-xs font-semibold text-text tracking-wider uppercase mb-1.5">
+                      Message <span className="text-primary">*</span>
                     </label>
                     <textarea
                       name="message"
@@ -240,9 +240,9 @@ export default function ContactSection() {
                       placeholder="Tell us about your requirements, custom order, or any question…"
                       required
                       rows={5}
-                      className="w-full border border-gray-200 px-4 py-3 text-sm text-charcoal
-                                 placeholder-gray-400 focus:outline-none focus:border-gold-400
-                                 transition-colors bg-pearl resize-none"
+                      className="w-full border border-border px-4 py-3 text-sm text-text
+                                 placeholder-gray-400 focus:outline-none focus:border-primary
+                                 transition-colors bg-bg resize-none"
                     />
                   </div>
 
@@ -251,7 +251,7 @@ export default function ContactSection() {
                     type="submit"
                     disabled={loading}
                     className="w-full flex items-center justify-center gap-2 py-3.5 text-xs font-bold
-                               tracking-widest uppercase text-charcoal transition-all duration-300
+                               tracking-widest uppercase text-surface-dark transition-all duration-300
                                hover:opacity-90 disabled:opacity-60"
                     style={{ background: 'linear-gradient(135deg, #e6b84a, #a37820)' }}
                   >
@@ -265,7 +265,7 @@ export default function ContactSection() {
                     )}
                   </button>
 
-                  <p className="text-[11px] text-gray-400 text-center">
+                  <p className="text-[11px] text-muted text-center">
                     We typically respond within 24 hours on working days.
                   </p>
                 </form>

@@ -43,11 +43,11 @@ export default function NotFound() {
 
       {/* Large faded ring */}
       <div
-        className="absolute w-[500px] h-[500px] rounded-full border border-gold-800/20 pointer-events-none"
+        className="absolute w-[500px] h-[500px] rounded-full border border-primary-hover/20 pointer-events-none"
         style={{ left: '50%', top: '50%', transform: 'translate(-50%, -50%)' }}
       />
       <div
-        className="absolute w-[700px] h-[700px] rounded-full border border-gold-800/10 pointer-events-none"
+        className="absolute w-[700px] h-[700px] rounded-full border border-primary-hover/10 pointer-events-none"
         style={{ left: '50%', top: '50%', transform: 'translate(-50%, -50%)' }}
       />
 
@@ -106,7 +106,7 @@ export default function NotFound() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.4, duration: 0.5 }}
-          className="font-serif text-2xl sm:text-3xl font-bold text-white mb-3"
+          className="font-serif text-2xl sm:text-3xl font-bold text-on-dark mb-3"
         >
           Lost Among Our Treasures?
         </motion.h1>
@@ -115,7 +115,7 @@ export default function NotFound() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5, duration: 0.5 }}
-          className="text-gray-400 text-sm leading-relaxed mb-10 max-w-sm mx-auto"
+          className="text-muted text-sm leading-relaxed mb-10 max-w-sm mx-auto"
         >
           The page you&apos;re looking for may have been moved or doesn&apos;t exist.
           Let us guide you back to our collection of timeless jewellery.
@@ -130,7 +130,7 @@ export default function NotFound() {
         >
           <Link
             href="/"
-            className="flex items-center gap-2 px-7 py-3.5 text-xs font-bold tracking-widest uppercase text-charcoal transition-all hover:opacity-90 w-full sm:w-auto justify-center"
+            className="flex items-center gap-2 px-7 py-3.5 text-xs font-bold tracking-widest uppercase text-surface-dark transition-all hover:opacity-90 w-full sm:w-auto justify-center"
             style={{ background: 'linear-gradient(135deg, #e6b84a, #a37820)' }}
           >
             <Home size={13} /> Back to Home
@@ -138,7 +138,7 @@ export default function NotFound() {
 
           <Link
             href="/products"
-            className="flex items-center gap-2 px-7 py-3.5 text-xs font-bold tracking-widest uppercase text-white border border-white/20 hover:border-gold-400 hover:text-gold-400 transition-all w-full sm:w-auto justify-center"
+            className="flex items-center gap-2 px-7 py-3.5 text-xs font-bold tracking-widest uppercase text-on-dark border border-white/20 hover:border-primary hover:text-accent transition-all w-full sm:w-auto justify-center"
           >
             <ShoppingBag size={13} /> Browse Collections
           </Link>
@@ -149,11 +149,11 @@ export default function NotFound() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.8, duration: 0.5 }}
-          className="mt-10 flex items-center justify-center gap-2 text-gray-500 text-xs"
+          className="mt-10 flex items-center justify-center gap-2 text-muted text-xs"
         >
-          <Phone size={11} className="text-gold-500" />
+          <Phone size={11} className="text-primary" />
           <span>Need help?&nbsp;</span>
-          <Link href="/#contact" className="text-gold-400 hover:text-gold-300 transition-colors underline underline-offset-2">
+          <Link href="/#contact" className="text-accent hover:text-accent transition-colors underline underline-offset-2">
             Contact us
           </Link>
         </motion.div>

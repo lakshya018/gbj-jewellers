@@ -23,7 +23,7 @@ export default function WhatsAppButton() {
     >
       {/* Tooltip */}
       <span className="hidden sm:block opacity-0 group-hover:opacity-100 transition-opacity duration-200
-        bg-charcoal text-white text-[11px] font-medium px-3 py-1.5 rounded-sm whitespace-nowrap
+        bg-surface-dark text-on-dark text-[11px] font-medium px-3 py-1.5 rounded-sm whitespace-nowrap
         shadow-md pointer-events-none">
         Chat with us
       </span>

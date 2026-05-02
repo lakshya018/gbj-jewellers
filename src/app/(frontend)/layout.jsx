@@ -1,7 +1,9 @@
+import { Suspense } from 'react';
 import './globals.css';
 import { CartProvider } from '@/context/CartContext';
 import { WishlistProvider } from '@/context/WishlistContext';
 import { AuthProvider } from '@/context/AuthContext';
+import { ThemeProvider } from '@/components/ThemeProvider';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import WhatsAppButton from '@/components/ui/WhatsAppButton';
@@ -54,20 +56,24 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <AuthProvider>
-      <html lang="en">
+      <html lang="en" suppressHydrationWarning>
         <head>
           <link rel="preconnect" href="https://fonts.googleapis.com" />
           <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         </head>
-        <body className="bg-pearl font-sans antialiased">
-          <CartProvider>
-            <WishlistProvider>
-              <Navbar />
-              <main>{children}</main>
-              <Footer />
-              <WhatsAppButton />
-            </WishlistProvider>
-          </CartProvider>
+        <body className="bg-bg text-text font-sans antialiased transition-colors duration-300">
+          <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
+            <CartProvider>
+              <WishlistProvider>
+                <Suspense fallback={null}>
+                  <Navbar />
+                </Suspense>
+                <main>{children}</main>
+                <Footer />
+                <WhatsAppButton />
+              </WishlistProvider>
+            </CartProvider>
+          </ThemeProvider>
         </body>
       </html>
     </AuthProvider>

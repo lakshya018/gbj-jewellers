@@ -3,12 +3,13 @@
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { ShoppingBag, Heart, Search, Menu, X, ChevronDown, User } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useCart } from '@/context/CartContext';
 import { useWishlist } from '@/context/WishlistContext';
 import { useAuth } from '@/context/AuthContext';
+import ThemeToggle from '@/components/ui/ThemeToggle';
 
 const navLinks = [
   { label: 'Home', href: '/' },
@@ -34,6 +35,7 @@ export default function Navbar() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const searchRef = useRef(null);
   const pathname = usePathname();
+  const searchParams = useSearchParams();
   const router = useRouter();
 
   const handleSearch = (e) => {
@@ -62,11 +64,30 @@ export default function Navbar() {
   }, [searchOpen]);
 
   // Close mobile menu on route change
-  useEffect(() => setMobileOpen(false), [pathname]);
+  useEffect(() => setMobileOpen(false), [pathname, searchParams]);
 
   const isActive = (href) => {
     if (href === '/') return pathname === '/';
-    return pathname.startsWith(href.split('?')[0]);
+    
+    const [path, query] = href.split('?');
+    
+    // Not on the right base path
+    if (pathname !== path && !pathname.startsWith(path + '/')) return false;
+
+    // Check specific category matching
+    if (query) {
+      const targetCategory = new URLSearchParams(query).get('category');
+      const currentCategory = searchParams.get('category');
+      return targetCategory === currentCategory;
+    }
+
+    // If no query in the link (like 'Collections' -> /products), 
+    // only highlight if the user isn't in a specific category.
+    if (path === '/products' && searchParams.has('category')) {
+      return false;
+    }
+
+    return true;
   };
 
   const isHome = pathname === '/';
@@ -77,7 +98,7 @@ export default function Navbar() {
     <>
       <header
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${isSolid
-            ? 'bg-white/95 backdrop-blur-md shadow-md py-3'
+            ? 'bg-bg/95 backdrop-blur-md shadow-md py-3 border-b border-border/50'
             : 'bg-transparent py-5'
           }`}
       >
@@ -96,13 +117,13 @@ export default function Navbar() {
                 />
                 <div className="flex flex-col -ml-3">
                   <div>
-                    <span className={`font-serif font-bold text-xl tracking-wide transition-colors ${isSolid ? 'text-charcoal' : 'text-white'
+                    <span className={`font-serif font-bold text-xl tracking-wide transition-colors ${isSolid ? 'text-text' : 'text-on-dark'
                       }`}>
                       GBJ
                     </span>
-                    <span className={`font-serif text-xl transition-colors ${isSolid ? 'text-gold-600' : 'text-gold-400'}`}> Jewellers</span>
+                    <span className={`font-serif text-xl transition-colors ${isSolid ? 'text-primary-hover' : 'text-accent'}`}> Jewellers</span>
                   </div>
-                  <div className="text-[9px] tracking-[0.35em] uppercase text-gold-500 mt-0.5">
+                  <div className="text-[9px] tracking-[0.35em] uppercase text-primary mt-0.5">
                     Since 1925
                   </div>
                 </div>
@@ -118,14 +139,14 @@ export default function Navbar() {
                   <Link
                     href={link.href}
                     className={`text-[11px] font-bold tracking-[0.2em] uppercase transition-all duration-300 relative py-2 flex items-center gap-1.5
-                      ${isSolid ? 'text-charcoal/80 hover:text-gold-600' : 'text-white/80 hover:text-gold-400'}
-                      ${isActive(link.href) ? (isSolid ? 'text-gold-600' : 'text-gold-400') : ''}
+                      ${isSolid ? 'text-text/80 hover:text-primary-hover' : 'text-on-dark/80 hover:text-accent'}
+                      ${isActive(link.href) ? (isSolid ? 'text-primary-hover' : 'text-accent') : ''}
                     `}
                   >
                     {link.label}
                     {link.hasDropdown && <ChevronDown size={10} className={`mt-0.5 transition-transform duration-300 ${dropdownOpen ? 'rotate-180' : ''}`} />}
                     <span className={`absolute bottom-0 left-0 w-0 h-0.5 transition-all duration-300 
-                      ${isSolid ? 'bg-gold-500' : 'bg-gold-400'} 
+                      ${isSolid ? 'bg-primary' : 'bg-accent'} 
                       ${isActive(link.href) ? 'w-full' : 'group-hover:w-full'}`} 
                     />
                   </Link>
@@ -137,13 +158,13 @@ export default function Navbar() {
                           initial={{ opacity: 0, y: 8 }}
                           animate={{ opacity: 1, y: 0 }}
                           exit={{ opacity: 0, y: 8 }}
-                          className="absolute top-full left-0 mt-0 w-52 bg-white shadow-lg border-t-2 border-gold-500 py-2"
+                          className="absolute top-full left-0 mt-0 w-52 bg-card shadow-lg border-t-2 border-primary-hover py-2"
                         >
                           {collectionLinks.map((cl) => (
                             <Link
                               key={cl.href}
                               href={cl.href}
-                              className="block px-5 py-2.5 text-[10px] text-charcoal hover:bg-gray-50 hover:text-gold-600 transition-colors tracking-widest uppercase"
+                              className="block px-5 py-2.5 text-[10px] text-text hover:bg-secondary hover:text-primary-hover transition-colors tracking-widest uppercase"
                             >
                               {cl.label}
                             </Link>
@@ -158,10 +179,12 @@ export default function Navbar() {
 
             {/* Right Icons */}
             <div className="flex items-center gap-1 sm:gap-3">
+              <ThemeToggle />
+
               <button
                 onClick={() => setSearchOpen(!searchOpen)}
                 className={`p-2 transition-colors duration-300 rounded-full hover:bg-black/5
-                  ${isSolid ? 'text-charcoal' : 'text-white'}`}
+                  ${isSolid ? 'text-text' : 'text-on-dark'}`}
                 aria-label="Search"
               >
                 <Search size={20} />
@@ -170,12 +193,12 @@ export default function Navbar() {
               <Link
                 href="/wishlist"
                 className={`p-2 transition-colors duration-300 relative rounded-full hover:bg-black/5
-                  ${isSolid ? 'text-charcoal' : 'text-white'}`}
+                  ${isSolid ? 'text-text' : 'text-on-dark'}`}
                 aria-label="Wishlist"
               >
                 <Heart size={20} />
                 {wishlistCount > 0 && (
-                  <span className="absolute top-1 right-1 w-4 h-4 bg-rose-500 text-white text-[9px] font-bold flex items-center justify-center rounded-full ring-2 ring-white">
+                  <span className="absolute top-1 right-1 w-4 h-4 bg-rose-500 text-on-dark text-[9px] font-bold flex items-center justify-center rounded-full ring-2 ring-white">
                     {wishlistCount}
                   </span>
                 )}
@@ -184,18 +207,18 @@ export default function Navbar() {
               <Link
                 href="/cart"
                 className={`p-2 transition-colors duration-300 relative rounded-full hover:bg-black/5
-                  ${isSolid ? 'text-charcoal' : 'text-white'}`}
+                  ${isSolid ? 'text-text' : 'text-on-dark'}`}
                 aria-label="Shopping Cart"
               >
                 <ShoppingBag size={20} />
                 {cartCount > 0 && (
-                  <span className="absolute top-1 right-1 w-4 h-4 bg-gold-500 text-white text-[9px] font-bold flex items-center justify-center rounded-full ring-2 ring-white">
+                  <span className="absolute top-1 right-1 w-4 h-4 bg-primary text-on-dark text-[9px] font-bold flex items-center justify-center rounded-full ring-2 ring-white">
                     {cartCount}
                   </span>
                 )}
               </Link>
 
-              <div className="hidden sm:block border-l border-gray-200 h-6 mx-1" />
+              <div className="hidden sm:block border-l border-border h-6 mx-1" />
 
               {user ? (
                 <div className="flex items-center gap-3 ml-1">
@@ -204,11 +227,11 @@ export default function Navbar() {
                       <img
                         src={user.photoURL}
                         alt={user.displayName || 'Account'}
-                        className="w-8 h-8 rounded-full object-cover ring-2 ring-gold-500 ring-offset-1 hover:ring-gold-400 transition-all"
+                        className="w-8 h-8 rounded-full object-cover ring-2 ring-primary ring-offset-1 hover:ring-accent transition-all"
                         referrerPolicy="no-referrer"
                       />
                     ) : (
-                      <div className="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold ring-2 ring-gold-500 ring-offset-1"
+                      <div className="w-8 h-8 rounded-full flex items-center justify-center text-on-dark text-xs font-bold ring-2 ring-primary ring-offset-1"
                         style={{ background: 'linear-gradient(135deg, #e6b84a, #a37820)' }}>
                         {(user.displayName || user.email || '?')[0].toUpperCase()}
                       </div>
@@ -219,7 +242,7 @@ export default function Navbar() {
                 <Link
                   href="/login"
                   className={`p-2 transition-colors duration-300 rounded-full hover:bg-black/5
-                    ${isSolid ? 'text-charcoal' : 'text-white'}`}
+                    ${isSolid ? 'text-text' : 'text-on-dark'}`}
                   aria-label="Sign In"
                 >
                   <User size={20} />
@@ -229,7 +252,7 @@ export default function Navbar() {
               <button
                 onClick={() => setMobileOpen(true)}
                 className={`lg:hidden p-2 transition-colors duration-300 rounded-full hover:bg-black/5
-                  ${isSolid ? 'text-charcoal' : 'text-white'}`}
+                  ${isSolid ? 'text-text' : 'text-on-dark'}`}
                 aria-label="Menu"
               >
                 <Menu size={22} />
@@ -255,9 +278,9 @@ export default function Navbar() {
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: 'tween', duration: 0.3 }}
-              className="fixed top-0 right-0 h-full w-72 bg-white z-50 flex flex-col lg:hidden"
+              className="fixed top-0 right-0 h-full w-72 bg-card z-50 flex flex-col lg:hidden"
             >
-              <div className="flex items-center justify-between px-6 py-5 border-b border-gray-100">
+              <div className="flex items-center justify-between px-6 py-5 border-b border-border">
                 <div className="flex items-center">
                   <Image
                     src="/images/gbj_logo.png"
@@ -267,13 +290,13 @@ export default function Navbar() {
                     className="w-24 object-contain"
                   />
                   <div className="flex flex-col -ml-3">
-                    <span className="font-serif text-xl text-charcoal">
-                      GBJ <span className="text-gold-500">Jewellers</span>
+                    <span className="font-serif text-xl text-text">
+                      GBJ <span className="text-primary">Jewellers</span>
                     </span>
                   </div>
                 </div>
                 <button onClick={() => setMobileOpen(false)}>
-                  <X size={20} className="text-charcoal" />
+                  <X size={20} className="text-text" />
                 </button>
               </div>
               <nav className="flex-1 px-6 py-6 space-y-1 overflow-y-auto">
@@ -290,14 +313,14 @@ export default function Navbar() {
                   <Link
                     key={link.href}
                     href={link.href}
-                    className="flex items-center justify-between py-3 text-sm text-charcoal hover:text-gold-500 border-b border-gray-50 tracking-wider uppercase"
+                    className="flex items-center justify-between py-3 text-sm text-text hover:text-primary border-b border-border tracking-wider uppercase"
                   >
                     {link.label}
                   </Link>
                 ))}
               </nav>
-              <div className="px-6 py-4 bg-pearl">
-                <p className="text-xs text-gray-500 text-center">BIS Hallmarked | IGI Certified</p>
+              <div className="px-6 py-4 bg-bg">
+                <p className="text-xs text-muted text-center">BIS Hallmarked | IGI Certified</p>
               </div>
             </motion.div>
           </>

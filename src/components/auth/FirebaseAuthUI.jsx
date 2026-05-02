@@ -96,13 +96,13 @@ export default function FirebaseAuthUI({ onSuccess }) {
           <button
             onClick={handleGoogle}
             disabled={loading}
-            className="w-full flex items-center gap-4 bg-white border-2 border-gray-100 py-4 px-5 rounded-2xl hover:border-gray-200 hover:shadow-lg hover:shadow-black/5 transition-all duration-300 disabled:opacity-60 group"
+            className="w-full flex items-center gap-4 bg-card border-2 border-border py-4 px-5 rounded-2xl hover:border-border hover:shadow-lg hover:shadow-black/5 transition-all duration-300 disabled:opacity-60 group"
           >
             {loading ? (
-              <Loader2 className="animate-spin text-gray-400 mx-auto" size={22} />
+              <Loader2 className="animate-spin text-muted mx-auto" size={22} />
             ) : (
               <>
-                <div className="w-10 h-10 bg-white rounded-xl border border-gray-100 flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform">
+                <div className="w-10 h-10 bg-card rounded-xl border border-border flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform">
                   <svg width="22" height="22" viewBox="0 0 24 24">
                     <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4" />
                     <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
@@ -111,43 +111,43 @@ export default function FirebaseAuthUI({ onSuccess }) {
                   </svg>
                 </div>
                 <div className="flex-1 text-left">
-                  <p className="text-sm font-semibold text-charcoal">Continue with Google</p>
-                  <p className="text-[11px] text-gray-400 mt-0.5">Fast & secure sign-in</p>
+                  <p className="text-sm font-semibold text-text">Continue with Google</p>
+                  <p className="text-[11px] text-muted mt-0.5">Fast & secure sign-in</p>
                 </div>
-                <ArrowRight size={16} className="text-gray-300 group-hover:text-gold-500 group-hover:translate-x-1 transition-all" />
+                <ArrowRight size={16} className="text-muted group-hover:text-primary group-hover:translate-x-1 transition-all" />
               </>
             )}
           </button>
 
           <div className="flex items-center gap-4 py-1">
             <div className="flex-1 h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent"></div>
-            <span className="text-[10px] font-bold tracking-[0.25em] uppercase text-gray-300">or</span>
+            <span className="text-[10px] font-bold tracking-[0.25em] uppercase text-muted">or</span>
             <div className="flex-1 h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent"></div>
           </div>
 
           <button
             onClick={() => setMode('phone')}
-            className="w-full flex items-center gap-4 py-4 px-5 rounded-2xl border-2 border-gray-100 hover:border-gray-200 hover:shadow-lg hover:shadow-black/5 transition-all duration-300 group"
+            className="w-full flex items-center gap-4 py-4 px-5 rounded-2xl border-2 border-border hover:border-border hover:shadow-lg hover:shadow-black/5 transition-all duration-300 group"
           >
             <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform"
               style={{ background: 'linear-gradient(135deg, #e6b84a, #a37820)' }}>
-              <span className="text-white text-lg">📱</span>
+              <span className="text-on-dark text-lg">📱</span>
             </div>
             <div className="flex-1 text-left">
-              <p className="text-sm font-semibold text-charcoal">Continue with Phone</p>
-              <p className="text-[11px] text-gray-400 mt-0.5">Receive OTP on your number</p>
+              <p className="text-sm font-semibold text-text">Continue with Phone</p>
+              <p className="text-[11px] text-muted mt-0.5">Receive OTP on your number</p>
             </div>
-            <ArrowRight size={16} className="text-gray-300 group-hover:text-gold-500 group-hover:translate-x-1 transition-all" />
+            <ArrowRight size={16} className="text-muted group-hover:text-primary group-hover:translate-x-1 transition-all" />
           </button>
 
           <div className="flex items-center justify-center gap-4 pt-2">
-            <div className="flex items-center gap-1.5 text-[10px] text-gray-400">
+            <div className="flex items-center gap-1.5 text-[10px] text-muted">
               <ShieldCheck size={13} className="text-green-500" />
               <span>256-bit SSL</span>
             </div>
             <div className="w-1 h-1 rounded-full bg-gray-200"></div>
-            <div className="flex items-center gap-1.5 text-[10px] text-gray-400">
-              <Sparkles size={13} className="text-gold-500" />
+            <div className="flex items-center gap-1.5 text-[10px] text-muted">
+              <Sparkles size={13} className="text-primary" />
               <span>Secure & Private</span>
             </div>
           </div>
@@ -162,29 +162,29 @@ export default function FirebaseAuthUI({ onSuccess }) {
               style={{ background: 'linear-gradient(135deg, #e6b84a, #a37820)' }}>
               <span className="text-2xl">📱</span>
             </div>
-            <p className="text-sm text-gray-500">Enter your mobile number to receive a one-time code</p>
+            <p className="text-sm text-muted">Enter your mobile number to receive a one-time code</p>
           </div>
 
           <div className="flex gap-2">
-            <div className="flex items-center px-4 bg-gray-50 border-2 border-gray-100 rounded-xl text-sm text-charcoal font-semibold tracking-wide">
+            <div className="flex items-center px-4 bg-secondary border-2 border-border rounded-xl text-sm text-text font-semibold tracking-wide">
               🇮🇳 +91
             </div>
             <input
               type="tel" value={phone}
               onChange={(e) => setPhone(e.target.value.replace(/\D/g, ''))}
               placeholder="98765 43210" maxLength={10} autoFocus
-              className="flex-1 bg-gray-50 border-2 border-gray-100 py-3.5 px-4 rounded-xl focus:ring-2 focus:ring-gold-500/20 focus:border-gold-400 outline-none transition-all text-charcoal text-base tracking-wider font-medium"
+              className="flex-1 bg-secondary border-2 border-border py-3.5 px-4 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all text-text text-base tracking-wider font-medium"
             />
           </div>
 
           <button type="submit" disabled={loading || phone.length < 10}
-            className="w-full py-4 rounded-xl font-bold tracking-widest uppercase text-xs text-white flex items-center justify-center gap-2 disabled:opacity-50 transition-all hover:shadow-xl hover:shadow-gold-500/20"
+            className="w-full py-4 rounded-xl font-bold tracking-widest uppercase text-xs text-on-dark flex items-center justify-center gap-2 disabled:opacity-50 transition-all hover:shadow-xl hover:shadow-primary/20"
             style={{ background: 'linear-gradient(135deg, #1a1a2e, #2d2d44)' }}>
             {loading ? <Loader2 className="animate-spin" size={18} /> : <>Send Verification Code <ArrowRight size={16} /></>}
           </button>
 
           <button type="button" onClick={() => { setMode('buttons'); setError(''); }}
-            className="w-full text-xs text-gray-400 hover:text-charcoal transition-colors py-2 font-medium">
+            className="w-full text-xs text-muted hover:text-text transition-colors py-2 font-medium">
             ← Back to sign-in options
           </button>
         </form>
@@ -197,9 +197,9 @@ export default function FirebaseAuthUI({ onSuccess }) {
             <div className="w-14 h-14 rounded-2xl bg-green-50 flex items-center justify-center mx-auto mb-3">
               <ShieldCheck size={28} className="text-green-500" />
             </div>
-            <p className="text-sm font-medium text-charcoal">Verification code sent!</p>
-            <p className="text-xs text-gray-400 mt-1">
-              Enter the 6-digit code sent to <span className="font-semibold text-charcoal">+91 {phone}</span>
+            <p className="text-sm font-medium text-text">Verification code sent!</p>
+            <p className="text-xs text-muted mt-1">
+              Enter the 6-digit code sent to <span className="font-semibold text-text">+91 {phone}</span>
             </p>
           </div>
 
@@ -207,17 +207,17 @@ export default function FirebaseAuthUI({ onSuccess }) {
             type="text" inputMode="numeric" value={otp}
             onChange={(e) => setOtp(e.target.value.replace(/\D/g, ''))}
             placeholder="• • • • • •" maxLength={6} autoFocus
-            className="w-full bg-gray-50 border-2 border-gray-100 py-4 px-4 rounded-xl focus:ring-2 focus:ring-gold-500/20 focus:border-gold-400 outline-none transition-all text-charcoal text-center text-2xl tracking-[0.6em] font-mono font-bold"
+            className="w-full bg-secondary border-2 border-border py-4 px-4 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all text-text text-center text-2xl tracking-[0.6em] font-mono font-bold"
           />
 
           <button type="submit" disabled={loading || otp.length < 6}
-            className="w-full py-4 rounded-xl font-bold tracking-widest uppercase text-xs text-white flex items-center justify-center gap-2 disabled:opacity-50 transition-all hover:shadow-xl hover:shadow-gold-500/20"
+            className="w-full py-4 rounded-xl font-bold tracking-widest uppercase text-xs text-on-dark flex items-center justify-center gap-2 disabled:opacity-50 transition-all hover:shadow-xl hover:shadow-primary/20"
             style={{ background: 'linear-gradient(135deg, #1a1a2e, #2d2d44)' }}>
             {loading ? <Loader2 className="animate-spin" size={18} /> : <>Verify & Sign In <ArrowRight size={16} /></>}
           </button>
 
           <button type="button" onClick={() => { setMode('phone'); setOtp(''); setError(''); }}
-            className="w-full text-xs text-gray-400 hover:text-charcoal transition-colors py-2 font-medium">
+            className="w-full text-xs text-muted hover:text-text transition-colors py-2 font-medium">
             ← Change number or resend
           </button>
         </form>

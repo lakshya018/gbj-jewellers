@@ -8,7 +8,7 @@ import ScrollReveal from '@/components/ui/ScrollReveal';
 
 export default function PromoBanners({ banners = [] }) {
   return (
-    <section className="py-20 lg:py-28 bg-pearl">
+    <section className="py-20 lg:py-28 bg-bg">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <ScrollReveal>
           <p className="section-subtitle">Limited Time Offers</p>
@@ -52,18 +52,18 @@ export default function PromoBanners({ banners = [] }) {
                       {banner.subtitle}
                     </p>
 
-                    <h3 className="font-serif text-white text-3xl lg:text-4xl font-bold mb-3">
+                    <h3 className="font-serif text-on-dark text-3xl lg:text-4xl font-bold mb-3">
                       {banner.title}
                     </h3>
 
-                    <p className="text-sm text-white/75 leading-relaxed max-w-xs">
+                    <p className="text-sm text-on-dark/75 leading-relaxed max-w-xs">
                       {banner.description}
                     </p>
                   </div>
 
                   <div className="mt-8">
                     <div
-                      className="group/btn inline-flex items-center gap-3 px-6 py-3 text-xs font-bold tracking-widest uppercase text-charcoal transition-all duration-300"
+                      className="group/btn inline-flex items-center gap-3 px-6 py-3 text-xs font-bold tracking-widest uppercase text-surface-dark transition-all duration-300"
                       style={{ background: banner.accentColor }}
                     >
                       {banner.cta}

@@ -33,13 +33,13 @@ const STEPS = ['Delivery', 'Payment', 'Review'];
 function Field({ label, name, value, onChange, placeholder, type = 'text', required, errors }) {
   return (
     <div>
-      <label className="block text-[10px] font-bold tracking-[0.2em] uppercase text-charcoal mb-1.5">
-        {label}{required && <span className="text-gold-500 ml-0.5">*</span>}
+      <label className="block text-[10px] font-bold tracking-[0.2em] uppercase text-text mb-1.5">
+        {label}{required && <span className="text-primary ml-0.5">*</span>}
       </label>
       <input
         type={type} value={value} onChange={onChange} placeholder={placeholder}
-        className={`w-full border px-4 py-3 text-sm bg-white focus:outline-none transition-colors
-          ${errors?.[name] ? 'border-rose-400 focus:border-rose-400' : 'border-gray-200 focus:border-gold-400'}`}
+        className={`w-full border px-4 py-3 text-sm bg-card focus:outline-none transition-colors
+          ${errors?.[name] ? 'border-rose-400 focus:border-rose-400' : 'border-border focus:border-primary'}`}
       />
       {errors?.[name] && <p className="text-rose-500 text-[11px] mt-1">{errors[name]}</p>}
     </div>
@@ -53,15 +53,15 @@ function StepBar({ step }) {
       {STEPS.map((s, i) => (
         <div key={s} className="flex items-center flex-1 last:flex-none">
           <div className={`flex items-center gap-2 text-xs font-bold tracking-widest uppercase transition-colors
-            ${i < step ? 'text-gold-500' : i === step ? 'text-charcoal' : 'text-gray-300'}`}>
+            ${i < step ? 'text-primary' : i === step ? 'text-text' : 'text-muted'}`}>
             <div className={`w-7 h-7 rounded-full flex items-center justify-center text-[11px] font-bold transition-all
-              ${i < step ? 'bg-gold-500 text-white' : i === step ? 'bg-charcoal text-white' : 'bg-gray-100 text-gray-300'}`}>
+              ${i < step ? 'bg-primary text-on-dark' : i === step ? 'bg-surface-dark text-on-dark' : 'bg-secondary text-muted'}`}>
               {i < step ? <CheckCircle size={14} /> : i + 1}
             </div>
             <span className="hidden sm:inline">{s}</span>
           </div>
           {i < STEPS.length - 1 && (
-            <div className={`flex-1 h-px mx-3 transition-colors ${i < step ? 'bg-gold-400' : 'bg-gray-200'}`} />
+            <div className={`flex-1 h-px mx-3 transition-colors ${i < step ? 'bg-accent' : 'bg-gray-200'}`} />
           )}
         </div>
       ))}
@@ -134,10 +134,10 @@ export default function CheckoutPage() {
   /* ── Redirect if cart empty ── */
   if (!cartItems.length) {
     return (
-      <div className="min-h-screen bg-pearl pt-20 flex flex-col items-center justify-center gap-4 text-center px-4">
+      <div className="min-h-screen bg-bg pt-20 flex flex-col items-center justify-center gap-4 text-center px-4">
         <div className="text-5xl">◇</div>
-        <h1 className="font-serif text-3xl font-bold text-charcoal">Your cart is empty</h1>
-        <Link href="/products" className="px-8 py-3 text-xs font-bold tracking-widest uppercase text-charcoal"
+        <h1 className="font-serif text-3xl font-bold text-text">Your cart is empty</h1>
+        <Link href="/products" className="px-8 py-3 text-xs font-bold tracking-widest uppercase text-surface-dark"
           style={{ background: 'linear-gradient(135deg, #e6b84a, #a37820)' }}>
           Continue Shopping
         </Link>
@@ -305,12 +305,12 @@ export default function CheckoutPage() {
   };
 
   return (
-    <div className="min-h-screen bg-pearl pt-20">
+    <div className="min-h-screen bg-bg pt-20">
       {/* Header */}
-      <div className="bg-charcoal py-10 px-4">
+      <div className="bg-surface-dark py-10 px-4">
         <div className="max-w-5xl mx-auto">
-          <p className="text-[10px] tracking-[0.35em] uppercase text-gold-400 mb-1">Secure Checkout</p>
-          <h1 className="font-serif text-3xl font-bold text-white">Checkout</h1>
+          <p className="text-[10px] tracking-[0.35em] uppercase text-accent mb-1">Secure Checkout</p>
+          <h1 className="font-serif text-3xl font-bold text-on-dark">Checkout</h1>
         </div>
       </div>
 
@@ -328,16 +328,16 @@ export default function CheckoutPage() {
                 <motion.div key="delivery"
                   initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}
                   transition={{ duration: 0.3 }}
-                  className="bg-white p-6 sm:p-8 space-y-5"
+                  className="bg-card p-6 sm:p-8 space-y-5"
                 >
                   <div>
-                    <p className="text-[10px] tracking-[0.3em] uppercase text-gold-600 mb-1">Step 1</p>
-                    <h2 className="font-serif text-xl font-bold text-charcoal">Delivery Address</h2>
+                    <p className="text-[10px] tracking-[0.3em] uppercase text-primary-hover mb-1">Step 1</p>
+                    <h2 className="font-serif text-xl font-bold text-text">Delivery Address</h2>
                   </div>
 
                   {user && savedAddresses.length > 0 && (
                     <div className="space-y-3">
-                      <p className="text-[10px] font-bold tracking-widest uppercase text-gray-400">Saved Addresses</p>
+                      <p className="text-[10px] font-bold tracking-widest uppercase text-muted">Saved Addresses</p>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         {savedAddresses.map((addr, idx) => (
                           <button
@@ -354,27 +354,27 @@ export default function CheckoutPage() {
                             })}
                             className={`flex flex-col p-4 border-2 transition-all text-left group
                               ${address.line1 === addr.line1 && address.pincode === addr.pincode 
-                                ? 'border-gold-400 bg-gold-50/30' 
-                                : 'border-gray-100 hover:border-gray-200 bg-white'}`}
+                                ? 'border-primary bg-primary/10' 
+                                : 'border-border hover:border-border bg-card'}`}
                           >
                             <div className="flex items-center justify-between mb-2">
-                              <span className="text-[10px] font-bold tracking-widest uppercase text-gold-600 flex items-center gap-1.5">
+                              <span className="text-[10px] font-bold tracking-widest uppercase text-primary-hover flex items-center gap-1.5">
                                 <MapPin size={12} /> {addr.label || 'Address'}
                               </span>
                               {address.line1 === addr.line1 && address.pincode === addr.pincode && (
-                                <CheckCircle size={14} className="text-gold-500" />
+                                <CheckCircle size={14} className="text-primary" />
                               )}
                             </div>
-                            <p className="text-sm font-semibold text-charcoal">{addr.fullName}</p>
-                            <p className="text-xs text-gray-500 line-clamp-1">{addr.line1}</p>
-                            <p className="text-xs text-gray-400 mt-1">{addr.city}, {addr.pincode}</p>
+                            <p className="text-sm font-semibold text-text">{addr.fullName}</p>
+                            <p className="text-xs text-muted line-clamp-1">{addr.line1}</p>
+                            <p className="text-xs text-muted mt-1">{addr.city}, {addr.pincode}</p>
                           </button>
                         ))}
                       </div>
                       <div className="flex items-center gap-3 pt-2">
-                        <div className="h-px flex-1 bg-gray-100" />
-                        <span className="text-[10px] font-bold tracking-widest uppercase text-gray-300">Or enter manually</span>
-                        <div className="h-px flex-1 bg-gray-100" />
+                        <div className="h-px flex-1 bg-secondary" />
+                        <span className="text-[10px] font-bold tracking-widest uppercase text-muted">Or enter manually</span>
+                        <div className="h-px flex-1 bg-secondary" />
                       </div>
                     </div>
                   )}
@@ -400,16 +400,16 @@ export default function CheckoutPage() {
                         onChange={e => setAddress(p => ({ ...p, city: e.target.value }))} placeholder="City" />
                     </div>
                     <div>
-                      <label className="block text-[10px] font-bold tracking-[0.2em] uppercase text-charcoal mb-1.5">
-                        State<span className="text-gold-500 ml-0.5">*</span>
+                      <label className="block text-[10px] font-bold tracking-[0.2em] uppercase text-text mb-1.5">
+                        State<span className="text-primary ml-0.5">*</span>
                       </label>
                       <div className="relative">
                         <select value={address.state}
                           onChange={e => setAddress(p => ({ ...p, state: e.target.value }))}
-                          className="w-full border border-gray-200 px-4 py-3 text-sm bg-white focus:outline-none focus:border-gold-400 appearance-none">
+                          className="w-full border border-border px-4 py-3 text-sm bg-card focus:outline-none focus:border-primary appearance-none">
                           {INDIAN_STATES.map(s => <option key={s} value={s}>{s}</option>)}
                         </select>
-                        <ChevronDown size={12} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+                        <ChevronDown size={12} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted pointer-events-none" />
                       </div>
                     </div>
                     <Field label="Pincode" name="pincode" required value={address.pincode} errors={errors}
@@ -423,9 +423,9 @@ export default function CheckoutPage() {
                         id="save-address" 
                         checked={shouldSaveAddress}
                         onChange={(e) => setShouldSaveAddress(e.target.checked)}
-                        className="w-4 h-4 accent-gold-500 border-gray-300 rounded focus:ring-gold-400"
+                        className="w-4 h-4 accent-primary border-gray-300 rounded focus:ring-accent"
                       />
-                      <label htmlFor="save-address" className="text-xs text-gray-500 cursor-pointer select-none">
+                      <label htmlFor="save-address" className="text-xs text-muted cursor-pointer select-none">
                         Save this address for future purchases
                       </label>
                     </div>
@@ -438,29 +438,29 @@ export default function CheckoutPage() {
                 <motion.div key="payment"
                   initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}
                   transition={{ duration: 0.3 }}
-                  className="bg-white p-6 sm:p-8"
+                  className="bg-card p-6 sm:p-8"
                 >
                   <div className="mb-6">
-                    <p className="text-[10px] tracking-[0.3em] uppercase text-gold-600 mb-1">Step 2</p>
-                    <h2 className="font-serif text-xl font-bold text-charcoal">Payment Method</h2>
+                    <p className="text-[10px] tracking-[0.3em] uppercase text-primary-hover mb-1">Step 2</p>
+                    <h2 className="font-serif text-xl font-bold text-text">Payment Method</h2>
                   </div>
 
                   <div className="space-y-3 mb-6">
                     {paymentMethods.map(({ id, icon: Icon, label, sub }) => (
                       <button key={id} onClick={() => { setPaymentMethod(id); setErrors({}); }}
                         className={`w-full flex items-center gap-4 p-4 border-2 transition-all duration-200 text-left
-                          ${paymentMethod === id ? 'border-gold-400 bg-gold-50' : 'border-gray-100 hover:border-gray-200'}`}>
+                          ${paymentMethod === id ? 'border-primary bg-primary/5' : 'border-border hover:border-border'}`}>
                         <div className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 transition-all
-                          ${paymentMethod === id ? 'bg-gold-500' : 'bg-gray-100'}`}>
-                          <Icon size={16} className={paymentMethod === id ? 'text-white' : 'text-gray-400'} />
+                          ${paymentMethod === id ? 'bg-primary' : 'bg-secondary'}`}>
+                          <Icon size={16} className={paymentMethod === id ? 'text-on-dark' : 'text-muted'} />
                         </div>
                         <div className="flex-1">
-                          <p className="text-sm font-semibold text-charcoal">{label}</p>
-                          <p className="text-xs text-gray-400">{sub}</p>
+                          <p className="text-sm font-semibold text-text">{label}</p>
+                          <p className="text-xs text-muted">{sub}</p>
                         </div>
                         <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center flex-shrink-0
-                          ${paymentMethod === id ? 'border-gold-500' : 'border-gray-300'}`}>
-                          {paymentMethod === id && <div className="w-2 h-2 rounded-full bg-gold-500" />}
+                          ${paymentMethod === id ? 'border-primary-hover' : 'border-gray-300'}`}>
+                          {paymentMethod === id && <div className="w-2 h-2 rounded-full bg-primary" />}
                         </div>
                       </button>
                     ))}
@@ -468,12 +468,12 @@ export default function CheckoutPage() {
 
                   {/* Note about Razorpay */}
                   {paymentMethod === 'razorpay' && (
-                    <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="p-4 bg-pearl border border-gray-100">
+                    <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="p-4 bg-bg border border-border">
                       <div className="flex gap-3">
-                        <Shield size={16} className="text-gold-600 mt-0.5" />
+                        <Shield size={16} className="text-primary-hover mt-0.5" />
                         <div>
-                          <p className="text-xs font-semibold text-charcoal">Secure Checkout</p>
-                          <p className="text-[11px] text-gray-500 leading-relaxed">
+                          <p className="text-xs font-semibold text-text">Secure Checkout</p>
+                          <p className="text-[11px] text-muted leading-relaxed">
                             You will be redirected to Razorpay's secure payment gateway to complete your transaction using UPI, Cards, or Netbanking.
                           </p>
                         </div>
@@ -482,7 +482,7 @@ export default function CheckoutPage() {
                   )}
 
                   {paymentMethod === 'cod' && (
-                    <p className="text-sm text-gray-500 bg-pearl border border-gray-100 px-4 py-3">
+                    <p className="text-sm text-muted bg-bg border border-border px-4 py-3">
                       💰 Pay in cash when your order is delivered. No advance required.
                     </p>
                   )}
@@ -494,52 +494,52 @@ export default function CheckoutPage() {
                 <motion.div key="review"
                   initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}
                   transition={{ duration: 0.3 }}
-                  className="bg-white p-6 sm:p-8 space-y-6"
+                  className="bg-card p-6 sm:p-8 space-y-6"
                 >
                   <div>
-                    <p className="text-[10px] tracking-[0.3em] uppercase text-gold-600 mb-1">Step 3</p>
-                    <h2 className="font-serif text-xl font-bold text-charcoal">Review Your Order</h2>
+                    <p className="text-[10px] tracking-[0.3em] uppercase text-primary-hover mb-1">Step 3</p>
+                    <h2 className="font-serif text-xl font-bold text-text">Review Your Order</h2>
                   </div>
 
                   {/* Delivery summary */}
-                  <div className="border border-gray-100 p-4">
+                  <div className="border border-border p-4">
                     <div className="flex items-center justify-between mb-2">
-                      <p className="text-[10px] font-bold tracking-widest uppercase text-gold-600">Delivery To</p>
-                      <button onClick={() => setStep(0)} className="text-[11px] text-charcoal underline hover:text-gold-500">Edit</button>
+                      <p className="text-[10px] font-bold tracking-widest uppercase text-primary-hover">Delivery To</p>
+                      <button onClick={() => setStep(0)} className="text-[11px] text-text underline hover:text-primary">Edit</button>
                     </div>
-                    <p className="text-sm font-semibold text-charcoal">{address.fullName}</p>
-                    <p className="text-xs text-gray-500 mt-0.5">
+                    <p className="text-sm font-semibold text-text">{address.fullName}</p>
+                    <p className="text-xs text-muted mt-0.5">
                       {[address.line1, address.line2, address.city, address.state, address.pincode].filter(Boolean).join(', ')}
                     </p>
-                    <p className="text-xs text-gray-500">{address.phone}</p>
+                    <p className="text-xs text-muted">{address.phone}</p>
                   </div>
 
                   {/* Payment summary */}
-                  <div className="border border-gray-100 p-4">
+                  <div className="border border-border p-4">
                     <div className="flex items-center justify-between mb-2">
-                      <p className="text-[10px] font-bold tracking-widest uppercase text-gold-600">Payment</p>
-                      <button onClick={() => setStep(1)} className="text-[11px] text-charcoal underline hover:text-gold-500">Edit</button>
+                      <p className="text-[10px] font-bold tracking-widest uppercase text-primary-hover">Payment</p>
+                      <button onClick={() => setStep(1)} className="text-[11px] text-text underline hover:text-primary">Edit</button>
                     </div>
-                    <p className="text-sm text-charcoal font-medium capitalize">
+                    <p className="text-sm text-text font-medium capitalize">
                       {paymentMethods.find(m => m.id === paymentMethod)?.label}
                     </p>
-                    {paymentMethod === 'upi' && upiId && <p className="text-xs text-gray-400">{upiId}</p>}
-                    {paymentMethod === 'card' && cardNum && <p className="text-xs text-gray-400">•••• {cardNum.slice(-4)}</p>}
+                    {paymentMethod === 'upi' && upiId && <p className="text-xs text-muted">{upiId}</p>}
+                    {paymentMethod === 'card' && cardNum && <p className="text-xs text-muted">•••• {cardNum.slice(-4)}</p>}
                   </div>
 
                   {/* Items */}
                   <div className="space-y-3">
                     {cartItems.map(item => (
                       <div key={`${item.id}-${item.size}`} className="flex gap-4 items-center">
-                        <div className="relative w-14 h-14 bg-gray-50 flex-shrink-0 overflow-hidden">
+                        <div className="relative w-14 h-14 bg-secondary flex-shrink-0 overflow-hidden">
                           <Image src={item.images?.[0] || '/images/gold_collection.jpg'} alt={item.name}
                             fill className="object-cover" sizes="56px" />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p className="text-xs font-semibold text-charcoal line-clamp-1">{item.name}</p>
-                          <p className="text-[11px] text-gray-400">{item.purity} · Qty {item.quantity}</p>
+                          <p className="text-xs font-semibold text-text line-clamp-1">{item.name}</p>
+                          <p className="text-[11px] text-muted">{item.purity} · Qty {item.quantity}</p>
                         </div>
-                        <p className="text-sm font-semibold text-charcoal flex-shrink-0">
+                        <p className="text-sm font-semibold text-text flex-shrink-0">
                           {formatPrice(item.price * item.quantity)}
                         </p>
                       </div>
@@ -553,25 +553,25 @@ export default function CheckoutPage() {
             <div className="flex items-center justify-between mt-5">
               {step > 0 ? (
                 <button onClick={() => setStep(s => s - 1)}
-                  className="flex items-center gap-2 text-xs font-bold tracking-widest uppercase text-charcoal hover:text-gold-500 transition-colors">
+                  className="flex items-center gap-2 text-xs font-bold tracking-widest uppercase text-text hover:text-primary transition-colors">
                   <ArrowLeft size={14} /> Back
                 </button>
               ) : (
                 <Link href="/cart"
-                  className="flex items-center gap-2 text-xs font-bold tracking-widest uppercase text-charcoal hover:text-gold-500 transition-colors">
+                  className="flex items-center gap-2 text-xs font-bold tracking-widest uppercase text-text hover:text-primary transition-colors">
                   <ArrowLeft size={14} /> Back to Cart
                 </Link>
               )}
 
               {step < 2 ? (
                 <button onClick={nextStep}
-                  className="flex items-center gap-2 px-8 py-3.5 text-xs font-bold tracking-widest uppercase text-charcoal transition-all hover:opacity-90"
+                  className="flex items-center gap-2 px-8 py-3.5 text-xs font-bold tracking-widest uppercase text-surface-dark transition-all hover:opacity-90"
                   style={{ background: 'linear-gradient(135deg, #e6b84a, #a37820)' }}>
                   Continue <ArrowRight size={14} />
                 </button>
               ) : (
                 <button onClick={placeOrder} disabled={placing}
-                  className="flex items-center gap-2 px-8 py-3.5 text-xs font-bold tracking-widest uppercase text-charcoal transition-all hover:opacity-90 disabled:opacity-60"
+                  className="flex items-center gap-2 px-8 py-3.5 text-xs font-bold tracking-widest uppercase text-surface-dark transition-all hover:opacity-90 disabled:opacity-60"
                   style={{ background: 'linear-gradient(135deg, #e6b84a, #a37820)' }}>
                   {placing ? <span className="animate-pulse">Placing Order…</span> : <><CheckCircle size={14} /> Place Order</>}
                 </button>
@@ -580,22 +580,22 @@ export default function CheckoutPage() {
           </div>
 
           {/* ── Right: Order Summary ── */}
-          <div className="bg-white p-6 h-fit sticky top-28">
-            <h3 className="font-serif text-lg font-bold text-charcoal mb-5">Order Summary</h3>
+          <div className="bg-card p-6 h-fit sticky top-28">
+            <h3 className="font-serif text-lg font-bold text-text mb-5">Order Summary</h3>
 
             {/* Items */}
             <div className="space-y-3 mb-5">
               {cartItems.map(item => (
                 <div key={`${item.id}-${item.size}`} className="flex gap-3 items-center">
-                  <div className="relative w-12 h-12 bg-gray-50 flex-shrink-0 overflow-hidden">
+                  <div className="relative w-12 h-12 bg-secondary flex-shrink-0 overflow-hidden">
                     <Image src={item.images?.[0] || '/images/gold_collection.jpg'} alt={item.name}
                       fill className="object-cover" sizes="48px" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-xs text-charcoal font-medium line-clamp-1">{item.name}</p>
-                    <p className="text-[11px] text-gray-400">Qty: {item.quantity}</p>
+                    <p className="text-xs text-text font-medium line-clamp-1">{item.name}</p>
+                    <p className="text-[11px] text-muted">Qty: {item.quantity}</p>
                   </div>
-                  <p className="text-xs font-semibold text-charcoal">{formatPrice(item.price * item.quantity)}</p>
+                  <p className="text-xs font-semibold text-text">{formatPrice(item.price * item.quantity)}</p>
                 </div>
               ))}
             </div>
@@ -609,8 +609,8 @@ export default function CheckoutPage() {
                 ['GST (3%)',       gst],
               ].map(([label, val]) => (
                 <div key={label} className="flex justify-between text-sm">
-                  <span className="text-gray-500">{label}</span>
-                  <span className="font-medium text-charcoal">{formatPrice(val)}</span>
+                  <span className="text-muted">{label}</span>
+                  <span className="font-medium text-text">{formatPrice(val)}</span>
                 </div>
               ))}
             </div>
@@ -618,17 +618,17 @@ export default function CheckoutPage() {
             <div className="gold-divider mb-4" />
 
             <div className="flex justify-between items-baseline mb-5">
-              <span className="font-semibold text-charcoal">Total</span>
-              <span className="font-serif text-2xl font-bold text-charcoal">{formatPrice(total)}</span>
+              <span className="font-semibold text-text">Total</span>
+              <span className="font-serif text-2xl font-bold text-text">{formatPrice(total)}</span>
             </div>
 
-            <div className="space-y-2 pt-3 border-t border-gray-100">
+            <div className="space-y-2 pt-3 border-t border-border">
               {[
                 [Shield, 'SSL encrypted & secure'],
                 [Truck,  'Free insured shipping'],
               ].map(([Icon, text]) => (
-                <div key={text} className="flex items-center gap-2 text-[11px] text-gray-400">
-                  <Icon size={11} className="text-gold-500" /><span>{text}</span>
+                <div key={text} className="flex items-center gap-2 text-[11px] text-muted">
+                  <Icon size={11} className="text-primary" /><span>{text}</span>
                 </div>
               ))}
             </div>

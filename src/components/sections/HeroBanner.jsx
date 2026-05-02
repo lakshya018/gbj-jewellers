@@ -7,7 +7,7 @@ import { ArrowRight, ChevronDown } from 'lucide-react';
 
 export default function HeroBanner() {
   return (
-    <section className="relative min-h-screen flex items-center overflow-hidden bg-charcoal">
+    <section className="relative min-h-screen flex items-center overflow-hidden bg-surface-dark">
       {/* Background Image */}
       <div className="absolute inset-0">
         <Image
@@ -33,8 +33,8 @@ export default function HeroBanner() {
             transition={{ duration: 0.7 }}
             className="flex items-center gap-4 mb-6"
           >
-            <div className="h-px w-12 bg-gold-400" />
-            <span className="text-gold-400 text-xs tracking-[0.35em] uppercase font-medium">
+            <div className="h-px w-12 bg-accent" />
+            <span className="text-accent text-xs tracking-[0.35em] uppercase font-medium">
               BIS Hallmarked Since 1925
             </span>
           </motion.div>
@@ -44,7 +44,7 @@ export default function HeroBanner() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.15 }}
-            className="font-serif text-4xl sm:text-5xl lg:text-7xl font-bold text-white leading-[1.1] mb-4"
+            className="font-serif text-4xl sm:text-5xl lg:text-7xl font-bold text-on-dark leading-[1.1] mb-4"
           >
             Where Every
             <span className="block italic font-normal" style={{
@@ -63,7 +63,7 @@ export default function HeroBanner() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.3 }}
-            className="text-gray-300 text-base sm:text-lg leading-relaxed mb-10 max-w-lg"
+            className="text-muted text-base sm:text-lg leading-relaxed mb-10 max-w-lg"
           >
             Discover our collection of handcrafted gold and diamond jewellery — from temple classics to contemporary designs, curated for the discerning Indian woman.
           </motion.p>
@@ -78,7 +78,7 @@ export default function HeroBanner() {
             <Link
               href="/products"
               id="hero-shop-now"
-              className="group inline-flex items-center gap-3 px-8 py-4 text-sm font-semibold tracking-widest uppercase text-charcoal transition-all duration-300"
+              className="group inline-flex items-center gap-3 px-8 py-4 text-sm font-semibold tracking-widest uppercase text-surface-dark transition-all duration-300"
               style={{ background: 'linear-gradient(135deg, #e6b84a, #a37820)' }}
             >
               Explore Collections
@@ -88,7 +88,7 @@ export default function HeroBanner() {
             <Link
               href="/products?category=Bridal"
               id="hero-bridal"
-              className="inline-flex items-center gap-3 px-8 py-4 text-sm font-semibold tracking-widest uppercase text-white border border-white/40 hover:border-gold-400 hover:text-gold-400 transition-all duration-300"
+              className="inline-flex items-center gap-3 px-8 py-4 text-sm font-semibold tracking-widest uppercase text-on-dark border border-white/40 hover:border-primary hover:text-accent transition-all duration-300"
             >
               Bridal Collection
             </Link>
@@ -107,8 +107,8 @@ export default function HeroBanner() {
               { num: '50,000+', label: 'Happy Clients' },
             ].map(({ num, label }) => (
               <div key={label} className="text-center">
-                <div className="font-serif text-xl font-bold text-gold-400">{num}</div>
-                <div className="text-[10px] tracking-widest uppercase text-gray-400 mt-0.5">{label}</div>
+                <div className="font-serif text-xl font-bold text-accent">{num}</div>
+                <div className="text-[10px] tracking-widest uppercase text-muted mt-0.5">{label}</div>
               </div>
             ))}
           </motion.div>
@@ -122,12 +122,12 @@ export default function HeroBanner() {
         transition={{ delay: 1.2, duration: 0.5 }}
         className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
       >
-        <span className="text-[10px] tracking-[0.3em] text-white/50 uppercase">Scroll</span>
+        <span className="text-[10px] tracking-[0.3em] text-on-dark/50 uppercase">Scroll</span>
         <motion.div
           animate={{ y: [0, 6, 0] }}
           transition={{ repeat: Infinity, duration: 1.6, ease: 'easeInOut' }}
         >
-          <ChevronDown size={16} className="text-white/50" />
+          <ChevronDown size={16} className="text-on-dark/50" />
         </motion.div>
       </motion.div>
     </section>

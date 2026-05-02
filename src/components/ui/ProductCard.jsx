@@ -22,7 +22,7 @@ const badgeColors = {
   Trending:   'bg-sky-100 text-sky-800',
   Sale:       'bg-rose-100 text-rose-800',
   Bridal:     'bg-purple-100 text-purple-800',
-  Signature:  'bg-gray-900 text-gold-400',
+  Signature:  'bg-gray-900 text-accent',
 };
 
 export default function ProductCard({ product, className = '' }) {
@@ -57,7 +57,7 @@ export default function ProductCard({ product, className = '' }) {
     >
       <Link href={`/products/${product.id}`} id={`product-card-${product.id}`}>
         {/* Image Container */}
-        <div className="relative overflow-hidden aspect-square bg-gray-50">
+        <div className="relative overflow-hidden aspect-square bg-secondary">
           <motion.div
             animate={{ scale: hovered ? 1.08 : 1 }}
             transition={{ duration: 0.55, ease: 'easeOut' }}
@@ -74,7 +74,7 @@ export default function ProductCard({ product, className = '' }) {
 
           {/* Badge */}
           {product.badge && (
-            <div className={`absolute top-3 left-3 text-[10px] font-semibold px-2.5 py-1 tracking-wider uppercase ${badgeColors[product.badge] || 'bg-gray-100 text-gray-700'}`}>
+            <div className={`absolute top-3 left-3 text-[10px] font-semibold px-2.5 py-1 tracking-wider uppercase ${badgeColors[product.badge] || 'bg-secondary text-muted'}`}>
               {product.badge}
             </div>
           )}
@@ -82,7 +82,7 @@ export default function ProductCard({ product, className = '' }) {
           {/* Out of Stock Overlay */}
           {!product.inStock && (
             <div className="absolute inset-0 bg-white/60 flex items-center justify-center">
-              <span className="text-xs font-semibold tracking-widest uppercase text-gray-500 bg-white px-4 py-2">Out of Stock</span>
+              <span className="text-xs font-semibold tracking-widest uppercase text-muted bg-card px-4 py-2">Out of Stock</span>
             </div>
           )}
 
@@ -102,7 +102,7 @@ export default function ProductCard({ product, className = '' }) {
                   animate={{ y: 0, opacity: 1 }}
                   exit={{ y: 16, opacity: 0 }}
                   transition={{ delay: 0.05 }}
-                  className="flex items-center gap-2 bg-white text-charcoal text-[11px] font-semibold tracking-widest uppercase px-5 py-2 hover:bg-gold-400 transition-colors"
+                  className="flex items-center gap-2 bg-card text-text text-[11px] font-semibold tracking-widest uppercase px-5 py-2 hover:bg-accent transition-colors"
                 >
                   <Eye size={12} /> Quick View
                 </motion.div>
@@ -114,8 +114,8 @@ export default function ProductCard({ product, className = '' }) {
           <button
             id={`wishlist-btn-${product.id}`}
             onClick={handleWishlist}
-            className={`absolute top-3 right-3 w-8 h-8 flex items-center justify-center bg-white shadow-sm transition-all duration-300 ${
-              wishlisted ? 'text-rose-500' : 'text-gray-400 hover:text-rose-400'
+            className={`absolute top-3 right-3 w-8 h-8 flex items-center justify-center bg-card shadow-sm transition-all duration-300 ${
+              wishlisted ? 'text-rose-500' : 'text-muted hover:text-rose-400'
             }`}
             aria-label={wishlisted ? 'Remove from wishlist' : 'Add to wishlist'}
           >
@@ -127,16 +127,16 @@ export default function ProductCard({ product, className = '' }) {
         <div className="p-4">
           {/* Category + Purity */}
           <div className="flex items-center justify-between mb-1.5">
-            <span className="text-[10px] tracking-widest uppercase text-gold-600 font-medium">
+            <span className="text-[10px] tracking-widest uppercase text-primary-hover font-medium">
               {product.category}
             </span>
-            <span className="text-[10px] bg-pearl text-charcoal px-2 py-0.5 font-semibold tracking-wider">
+            <span className="text-[10px] bg-bg text-text px-2 py-0.5 font-semibold tracking-wider">
               {product.purity}
             </span>
           </div>
 
           {/* Name */}
-          <h3 className="font-serif text-charcoal text-base font-semibold leading-snug mb-2 line-clamp-1 group-hover:text-gold-600 transition-colors">
+          <h3 className="font-serif text-text text-base font-semibold leading-snug mb-2 line-clamp-1 group-hover:text-primary-hover transition-colors">
             {product.name}
           </h3>
 
@@ -152,15 +152,15 @@ export default function ProductCard({ product, className = '' }) {
                 />
               ))}
             </div>
-            <span className="text-[10px] text-gray-400">({product.reviews})</span>
+            <span className="text-[10px] text-muted">({product.reviews})</span>
           </div>
 
           {/* Price */}
           <div className="flex items-center gap-2 mb-3">
-            <span className="font-semibold text-charcoal text-base">{formatPrice(product.price)}</span>
+            <span className="font-semibold text-text text-base">{formatPrice(product.price)}</span>
             {product.discount > 0 && (
               <>
-                <span className="text-xs text-gray-400 line-through">{formatPrice(product.originalPrice)}</span>
+                <span className="text-xs text-muted line-through">{formatPrice(product.originalPrice)}</span>
                 <span className="text-[10px] text-emerald-600 font-semibold">{product.discount}% off</span>
               </>
             )}
@@ -174,9 +174,9 @@ export default function ProductCard({ product, className = '' }) {
             className={`w-full py-2.5 text-[11px] font-semibold tracking-widest uppercase transition-all duration-300 flex items-center justify-center gap-2 ${
               product.inStock
                 ? added
-                  ? 'bg-charcoal text-white'
-                  : 'border border-charcoal text-charcoal hover:bg-charcoal hover:text-white'
-                : 'border border-gray-200 text-gray-300 cursor-not-allowed'
+                  ? 'bg-surface-dark text-on-dark'
+                  : 'border border-text text-text hover:bg-surface-dark hover:text-on-dark'
+                : 'border border-border text-muted cursor-not-allowed'
             }`}
           >
             <ShoppingBag size={12} />

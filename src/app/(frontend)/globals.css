@@ -5,14 +5,43 @@
 @tailwind utilities;
 
 :root {
+  /* Brand Typography */
   --font-playfair: 'Playfair Display', Georgia, serif;
   --font-inter: 'Inter', system-ui, sans-serif;
-  --gold-primary: #c9962a;
-  --gold-light: #e6b84a;
-  --gold-dark: #a37820;
-  --onyx: #0d0d0d;
-  --pearl: #f8f4ef;
-  --champagne: #f5e6c8;
+
+  /* Semantic Theme Tokens - Light Mode */
+  --color-bg: #f8f4ef;         /* pearl */
+  --color-text: #1c1c1e;       /* charcoal */
+  --color-primary: #c9962a;    /* gold-primary */
+  --color-primary-hover: #a37820; /* gold-dark */
+  --color-secondary: #f5e6c8;  /* champagne */
+  --color-card: #ffffff;       /* white */
+  --color-card-hover: #f9f9f9; /* off-white */
+  --color-border: #e5e7eb;     /* gray-200 */
+  --color-muted: #6b7280;      /* gray-500 */
+  --color-accent: #e6b84a;     /* gold-light */
+  
+  /* Always Dark (for footers, overlays) */
+  --color-surface-dark: #1c1c1e;
+  --color-text-on-dark: #ffffff;
+}
+
+.dark {
+  /* Semantic Theme Tokens - Dark Mode */
+  --color-bg: #121212;         /* premium dark */
+  --color-text: #f3f4f6;       /* gray-100 */
+  --color-primary: #e6b84a;    /* softened gold for dark mode */
+  --color-primary-hover: #c9962a; /* standard gold */
+  --color-secondary: #1c1c1e;  /* charcoal for secondary surfaces */
+  --color-card: #1a1a1a;       /* slightly elevated dark */
+  --color-card-hover: #262626; /* elevated dark hover */
+  --color-border: #333333;     /* subtle dark border */
+  --color-muted: #9ca3af;      /* gray-400 */
+  --color-accent: #fde68a;     /* bright gold accent */
+  
+  /* Always Dark */
+  --color-surface-dark: #121212; /* slightly darker or same in dark mode */
+  --color-text-on-dark: #ffffff;
 }
 
 @layer base {
@@ -20,6 +49,8 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+    /* Smooth UI Transitions */
+    transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
   }
 
   html {
@@ -28,8 +59,8 @@
 
   body {
     font-family: var(--font-inter);
-    background-color: var(--pearl);
-    color: var(--onyx);
+    background-color: var(--color-bg);
+    color: var(--color-text);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
@@ -44,14 +75,14 @@
     height: 6px;
   }
   ::-webkit-scrollbar-track {
-    background: #f1f1f1;
+    background: var(--color-bg);
   }
   ::-webkit-scrollbar-thumb {
-    background: var(--gold-primary);
+    background: var(--color-primary);
     border-radius: 3px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: var(--gold-dark);
+    background: var(--color-primary-hover);
   }
 }
 
@@ -60,9 +91,9 @@
   .skeleton {
     background: linear-gradient(
       90deg,
-      #e8e0d0 25%,
-      #f5ede0 50%,
-      #e8e0d0 75%
+      var(--color-card) 25%,
+      var(--color-card-hover) 50%,
+      var(--color-card) 75%
     );
     background-size: 200% 100%;
     animation: shimmer 1.8s ease-in-out infinite;
@@ -70,7 +101,7 @@
 
   /* Gold gradient text */
   .text-gold-gradient {
-    background: linear-gradient(135deg, #e6b84a 0%, #c9962a 50%, #a37820 100%);
+    background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-primary) 50%, var(--color-primary-hover) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -78,14 +109,14 @@
 
   /* Gold gradient button */
   .btn-gold {
-    @apply relative overflow-hidden bg-gold-gradient text-onyx font-semibold px-8 py-3 rounded-none tracking-widest uppercase text-sm transition-all duration-300;
-    background: linear-gradient(135deg, #e6b84a 0%, #c9962a 100%);
+    @apply relative overflow-hidden text-surface-dark font-semibold px-8 py-3 rounded-none tracking-widest uppercase text-sm transition-all duration-300;
+    background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-primary) 100%);
   }
   .btn-gold::before {
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(135deg, #c9962a 0%, #a37820 100%);
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-hover) 100%);
     opacity: 0;
     transition: opacity 0.3s ease;
   }
@@ -99,18 +130,19 @@
 
   /* Outline gold button */
   .btn-gold-outline {
-    @apply border border-gold-500 text-gold-600 font-semibold px-8 py-3 tracking-widest uppercase text-sm transition-all duration-300;
+    @apply border border-primary text-primary font-semibold px-8 py-3 tracking-widest uppercase text-sm transition-all duration-300;
   }
   .btn-gold-outline:hover {
-    @apply bg-gold-500 text-onyx;
+    @apply bg-primary text-surface-dark;
   }
 
   /* Product card */
   .product-card {
-    @apply relative bg-white overflow-hidden transition-all duration-500;
+    @apply relative bg-card overflow-hidden transition-all duration-500 border border-transparent;
     box-shadow: 0 2px 20px rgba(0,0,0,0.06);
   }
   .product-card:hover {
+    @apply bg-card-hover;
     box-shadow: 0 12px 48px rgba(0,0,0,0.15);
     transform: translateY(-4px);
   }
@@ -118,20 +150,20 @@
   /* Gold divider */
   .gold-divider {
     height: 1px;
-    background: linear-gradient(to right, transparent, #c9962a, transparent);
+    background: linear-gradient(to right, transparent, var(--color-primary), transparent);
   }
 
   /* Section title */
   .section-title {
-    @apply font-serif text-3xl md:text-4xl lg:text-5xl font-bold text-charcoal text-center;
+    @apply font-serif text-3xl md:text-4xl lg:text-5xl font-bold text-text text-center transition-colors;
   }
   .section-subtitle {
-    @apply font-sans text-sm tracking-[0.25em] uppercase text-gold-600 text-center mb-3;
+    @apply font-sans text-sm tracking-[0.25em] uppercase text-primary text-center mb-3;
   }
 
   /* Nav link */
   .nav-link {
-    @apply relative text-sm font-medium tracking-wider uppercase text-charcoal transition-colors duration-200;
+    @apply relative text-sm font-medium tracking-wider uppercase text-text transition-colors duration-200;
   }
   .nav-link::after {
     content: '';
@@ -140,7 +172,7 @@
     left: 0;
     width: 0;
     height: 1px;
-    background: var(--gold-primary);
+    background: var(--color-primary);
     transition: width 0.3s ease;
   }
   .nav-link:hover::after,
@@ -148,12 +180,12 @@
     width: 100%;
   }
   .nav-link:hover {
-    color: var(--gold-primary);
+    color: var(--color-primary);
   }
 
   /* Star rating */
-  .star-filled { color: #e6b84a; }
-  .star-empty  { color: #d1c7b7; }
+  .star-filled { color: var(--color-accent); }
+  .star-empty  { color: var(--color-border); }
 }
 
 @layer utilities {

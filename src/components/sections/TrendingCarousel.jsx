@@ -28,14 +28,14 @@ export default function TrendingCarousel({ trending = [] }) {
   };
 
   return (
-    <section className="py-20 lg:py-28 bg-white overflow-hidden">
+    <section className="py-20 lg:py-28 bg-card overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <ScrollReveal>
           <div className="flex items-end justify-between mb-10">
             <div>
               <p className="section-subtitle text-left">Handpicked</p>
-              <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl font-bold text-charcoal">
+              <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl font-bold text-text">
                 Trending Now
               </h2>
             </div>
@@ -45,8 +45,8 @@ export default function TrendingCarousel({ trending = [] }) {
                 disabled={!canScrollLeft}
                 className={`w-10 h-10 border flex items-center justify-center transition-all duration-300 ${
                   canScrollLeft
-                    ? 'border-gold-400 text-gold-500 hover:bg-gold-400 hover:text-white'
-                    : 'border-gray-200 text-gray-300 cursor-not-allowed'
+                    ? 'border-primary text-primary hover:bg-accent hover:text-on-dark'
+                    : 'border-border text-muted cursor-not-allowed'
                 }`}
                 aria-label="Scroll left"
               >
@@ -57,8 +57,8 @@ export default function TrendingCarousel({ trending = [] }) {
                 disabled={!canScrollRight}
                 className={`w-10 h-10 border flex items-center justify-center transition-all duration-300 ${
                   canScrollRight
-                    ? 'border-gold-400 text-gold-500 hover:bg-gold-400 hover:text-white'
-                    : 'border-gray-200 text-gray-300 cursor-not-allowed'
+                    ? 'border-primary text-primary hover:bg-accent hover:text-on-dark'
+                    : 'border-border text-muted cursor-not-allowed'
                 }`}
                 aria-label="Scroll right"
               >
@@ -67,7 +67,7 @@ export default function TrendingCarousel({ trending = [] }) {
               <Link
                 href="/products"
                 id="trending-view-all"
-                className="ml-2 flex items-center gap-2 text-xs font-semibold tracking-widest uppercase text-charcoal hover:text-gold-500 transition-colors"
+                className="ml-2 flex items-center gap-2 text-xs font-semibold tracking-widest uppercase text-text hover:text-primary transition-colors"
               >
                 View All <ArrowRight size={12} />
               </Link>
@@ -99,7 +99,7 @@ export default function TrendingCarousel({ trending = [] }) {
         <div className="mt-8 text-center md:hidden">
           <Link
             href="/products"
-            className="inline-flex items-center gap-2 text-sm font-semibold tracking-widest uppercase text-gold-500 border border-gold-400 px-6 py-3"
+            className="inline-flex items-center gap-2 text-sm font-semibold tracking-widest uppercase text-primary border border-primary px-6 py-3"
           >
             View All <ArrowRight size={14} />
           </Link>

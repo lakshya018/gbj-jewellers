@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 const config = {
+  darkMode: 'class',
   content: [
     './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',
@@ -8,22 +9,18 @@ const config = {
   theme: {
     extend: {
       colors: {
-        gold: {
-          50:  '#fefce8',
-          100: '#fef9c3',
-          200: '#fef08a',
-          300: '#fde047',
-          400: '#e6b84a',
-          500: '#c9962a',
-          600: '#a37820',
-          700: '#7c5a16',
-          800: '#55400f',
-          900: '#1a1200',
-        },
-        champagne: '#f5e6c8',
-        onyx: '#0d0d0d',
-        pearl: '#f8f4ef',
-        charcoal: '#1c1c1e',
+        bg: 'var(--color-bg)',
+        text: 'var(--color-text)',
+        primary: 'var(--color-primary)',
+        'primary-hover': 'var(--color-primary-hover)',
+        secondary: 'var(--color-secondary)',
+        card: 'var(--color-card)',
+        'card-hover': 'var(--color-card-hover)',
+        border: 'var(--color-border)',
+        muted: 'var(--color-muted)',
+        accent: 'var(--color-accent)',
+        'surface-dark': 'var(--color-surface-dark)',
+        'text-on-dark': 'var(--color-text-on-dark)',
       },
       fontFamily: {
         serif: ['var(--font-playfair)', 'Georgia', 'serif'],

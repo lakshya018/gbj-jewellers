@@ -45,17 +45,17 @@ export default function ProductDetailClient({ initialProduct, similarProducts = 
   const images = product.images?.length > 0 ? product.images : ['/images/gold_collection.jpg'];
 
   return (
-    <div className="min-h-screen bg-pearl pt-20">
+    <div className="min-h-screen bg-bg pt-20">
       {/* Breadcrumb */}
-      <div className="bg-white border-b border-gray-100 py-3 px-4">
-        <div className="max-w-7xl mx-auto flex items-center gap-2 text-xs text-gray-400">
-          <Link href="/" className="hover:text-gold-500 transition-colors">Home</Link>
+      <div className="bg-card border-b border-border py-3 px-4">
+        <div className="max-w-7xl mx-auto flex items-center gap-2 text-xs text-muted">
+          <Link href="/" className="hover:text-primary transition-colors">Home</Link>
           <ChevronRight size={10} />
-          <Link href="/products" className="hover:text-gold-500 transition-colors">Collections</Link>
+          <Link href="/products" className="hover:text-primary transition-colors">Collections</Link>
           <ChevronRight size={10} />
-          <Link href={`/products?category=${product.category}`} className="hover:text-gold-500 transition-colors">{product.category}</Link>
+          <Link href={`/products?category=${product.category}`} className="hover:text-primary transition-colors">{product.category}</Link>
           <ChevronRight size={10} />
-          <span className="text-charcoal font-medium line-clamp-1">{product.name}</span>
+          <span className="text-text font-medium line-clamp-1">{product.name}</span>
         </div>
       </div>
 
@@ -65,7 +65,7 @@ export default function ProductDetailClient({ initialProduct, similarProducts = 
           <div className="space-y-4">
             {/* Main Image */}
             <div
-              className="relative aspect-square bg-gray-50 overflow-hidden cursor-zoom-in"
+              className="relative aspect-square bg-secondary overflow-hidden cursor-zoom-in"
               onClick={() => setZoomed(!zoomed)}
             >
               <AnimatePresence mode="wait">
@@ -88,10 +88,10 @@ export default function ProductDetailClient({ initialProduct, similarProducts = 
                 </motion.div>
               </AnimatePresence>
               <div className="absolute top-4 right-4 bg-white/80 p-1.5 rounded-sm">
-                <ZoomIn size={14} className="text-gray-500" />
+                <ZoomIn size={14} className="text-muted" />
               </div>
               {product.badge && (
-                <div className="absolute top-4 left-4 bg-gold-500 text-white text-[10px] font-bold px-2.5 py-1 tracking-wider uppercase">
+                <div className="absolute top-4 left-4 bg-primary text-on-dark text-[10px] font-bold px-2.5 py-1 tracking-wider uppercase">
                   {product.badge}
                 </div>
               )}
@@ -105,7 +105,7 @@ export default function ProductDetailClient({ initialProduct, similarProducts = 
                     key={i}
                     onClick={() => { setActiveImage(i); setZoomed(false); }}
                     className={`relative w-20 h-20 flex-shrink-0 border-2 overflow-hidden transition-all duration-200 ${
-                      activeImage === i ? 'border-gold-500' : 'border-transparent hover:border-gold-300'
+                      activeImage === i ? 'border-primary-hover' : 'border-transparent hover:border-primary'
                     }`}
                   >
                     <Image src={img} alt="" fill className="object-cover" sizes="80px" />
@@ -118,12 +118,12 @@ export default function ProductDetailClient({ initialProduct, similarProducts = 
           {/* Right: Product Info */}
           <div>
             {/* Category */}
-            <p className="text-[11px] tracking-[0.3em] uppercase text-gold-600 font-medium mb-2">
+            <p className="text-[11px] tracking-[0.3em] uppercase text-primary-hover font-medium mb-2">
               {product.category} · {product.type}
             </p>
 
             {/* Name */}
-            <h1 className="font-serif text-3xl lg:text-4xl font-bold text-charcoal leading-tight mb-4">
+            <h1 className="font-serif text-3xl lg:text-4xl font-bold text-text leading-tight mb-4">
               {product.name}
             </h1>
 
@@ -139,17 +139,17 @@ export default function ProductDetailClient({ initialProduct, similarProducts = 
                   />
                 ))}
               </div>
-              <span className="text-sm text-gray-500">{product.rating} ({product.reviews} reviews)</span>
+              <span className="text-sm text-muted">{product.rating} ({product.reviews} reviews)</span>
             </div>
 
             {/* Price */}
             <div className="flex items-baseline gap-3 mb-6">
-              <span className="font-serif text-3xl font-bold text-charcoal">
+              <span className="font-serif text-3xl font-bold text-text">
                 {formatPrice(product.price)}
               </span>
               {product.discount > 0 && (
                 <>
-                  <span className="text-lg text-gray-400 line-through">{formatPrice(product.originalPrice)}</span>
+                  <span className="text-lg text-muted line-through">{formatPrice(product.originalPrice)}</span>
                   <span className="text-sm font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5">{product.discount}% off</span>
                 </>
               )}
@@ -159,30 +159,30 @@ export default function ProductDetailClient({ initialProduct, similarProducts = 
 
             {/* Purity & Weight */}
             <div className="flex gap-4 mb-6">
-              <div className="flex-1 bg-white border border-gray-100 p-4 text-center">
-                <Sparkles size={16} className="text-gold-500 mx-auto mb-1.5" />
-                <div className="font-semibold text-charcoal text-sm">{product.purity}</div>
-                <div className="text-[10px] text-gray-400 tracking-wider uppercase">Purity</div>
+              <div className="flex-1 bg-card border border-border p-4 text-center">
+                <Sparkles size={16} className="text-primary mx-auto mb-1.5" />
+                <div className="font-semibold text-text text-sm">{product.purity}</div>
+                <div className="text-[10px] text-muted tracking-wider uppercase">Purity</div>
               </div>
-              <div className="flex-1 bg-white border border-gray-100 p-4 text-center">
-                <Package size={16} className="text-gold-500 mx-auto mb-1.5" />
-                <div className="font-semibold text-charcoal text-sm">{product.weight}</div>
-                <div className="text-[10px] text-gray-400 tracking-wider uppercase">Net Weight</div>
+              <div className="flex-1 bg-card border border-border p-4 text-center">
+                <Package size={16} className="text-primary mx-auto mb-1.5" />
+                <div className="font-semibold text-text text-sm">{product.weight}</div>
+                <div className="text-[10px] text-muted tracking-wider uppercase">Net Weight</div>
               </div>
-              <div className="flex-1 bg-white border border-gray-100 p-4 text-center">
-                <Shield size={16} className="text-gold-500 mx-auto mb-1.5" />
-                <div className="font-semibold text-charcoal text-sm">BIS</div>
-                <div className="text-[10px] text-gray-400 tracking-wider uppercase">Certified</div>
+              <div className="flex-1 bg-card border border-border p-4 text-center">
+                <Shield size={16} className="text-primary mx-auto mb-1.5" />
+                <div className="font-semibold text-text text-sm">BIS</div>
+                <div className="text-[10px] text-muted tracking-wider uppercase">Certified</div>
               </div>
             </div>
 
             {/* Description */}
-            <p className="text-sm text-gray-600 leading-relaxed mb-6">{product.description}</p>
+            <p className="text-sm text-muted leading-relaxed mb-6">{product.description}</p>
 
             {/* Size Selector */}
             {product.sizes && (
               <div className="mb-6">
-                <p className="text-xs font-semibold tracking-widest uppercase text-charcoal mb-3">
+                <p className="text-xs font-semibold tracking-widest uppercase text-text mb-3">
                   Select Size
                 </p>
                 <div className="flex gap-2 flex-wrap">
@@ -193,8 +193,8 @@ export default function ProductDetailClient({ initialProduct, similarProducts = 
                       onClick={() => setSelectedSize(size)}
                       className={`w-12 h-10 border text-sm font-medium transition-all duration-200 ${
                         selectedSize === size
-                          ? 'border-gold-500 bg-gold-500 text-white'
-                          : 'border-gray-200 text-charcoal hover:border-gold-400'
+                          ? 'border-primary-hover bg-primary text-on-dark'
+                          : 'border-border text-text hover:border-primary'
                       }`}
                     >
                       {size}
@@ -206,12 +206,12 @@ export default function ProductDetailClient({ initialProduct, similarProducts = 
 
             {/* Quantity */}
             <div className="mb-6">
-              <p className="text-xs font-semibold tracking-widest uppercase text-charcoal mb-3">Quantity</p>
-              <div className="inline-flex items-center border border-gray-200">
+              <p className="text-xs font-semibold tracking-widest uppercase text-text mb-3">Quantity</p>
+              <div className="inline-flex items-center border border-border">
                 <button
                   id="qty-decrease"
                   onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-                  className="w-10 h-10 flex items-center justify-center text-charcoal hover:bg-gray-50 transition-colors border-r border-gray-200"
+                  className="w-10 h-10 flex items-center justify-center text-text hover:bg-secondary transition-colors border-r border-border"
                 >
                   −
                 </button>
@@ -219,7 +219,7 @@ export default function ProductDetailClient({ initialProduct, similarProducts = 
                 <button
                   id="qty-increase"
                   onClick={() => setQuantity((q) => q + 1)}
-                  className="w-10 h-10 flex items-center justify-center text-charcoal hover:bg-gray-50 transition-colors border-l border-gray-200"
+                  className="w-10 h-10 flex items-center justify-center text-text hover:bg-secondary transition-colors border-l border-border"
                 >
                   +
                 </button>
@@ -234,9 +234,9 @@ export default function ProductDetailClient({ initialProduct, similarProducts = 
                 disabled={!product.inStock}
                 className={`flex-1 py-4 text-sm font-bold tracking-widest uppercase flex items-center justify-center gap-2 transition-all duration-300 ${
                   !product.inStock
-                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                    ? 'bg-secondary text-muted cursor-not-allowed'
                     : added
-                    ? 'bg-charcoal text-white'
+                    ? 'bg-surface-dark text-on-dark'
                     : ''
                 }`}
                 style={product.inStock && !added ? { background: 'linear-gradient(135deg, #e6b84a, #a37820)', color: '#0d0d0d' } : {}}
@@ -251,7 +251,7 @@ export default function ProductDetailClient({ initialProduct, similarProducts = 
                 className={`w-14 border flex items-center justify-center transition-all duration-300 ${
                   wishlisted
                     ? 'border-rose-400 bg-rose-50 text-rose-500'
-                    : 'border-gray-300 text-gray-400 hover:border-rose-400 hover:text-rose-400'
+                    : 'border-gray-300 text-muted hover:border-rose-400 hover:text-rose-400'
                 }`}
                 aria-label="Toggle wishlist"
               >
@@ -260,15 +260,15 @@ export default function ProductDetailClient({ initialProduct, similarProducts = 
             </div>
 
             {/* Delivery info */}
-            <div className="bg-white border border-gray-100 p-4 space-y-3">
+            <div className="bg-card border border-border p-4 space-y-3">
               {[
                 { icon: Truck, text: 'Free shipping on this order' },
                 { icon: Shield, text: 'BIS Hallmarked certificate included' },
                 { icon: RotateCcw, text: '30-day hassle-free returns' },
               ].map(({ icon: Icon, text }) => (
                 <div key={text} className="flex items-center gap-3">
-                  <Icon size={14} className="text-gold-500 flex-shrink-0" />
-                  <span className="text-xs text-gray-600">{text}</span>
+                  <Icon size={14} className="text-primary flex-shrink-0" />
+                  <span className="text-xs text-muted">{text}</span>
                 </div>
               ))}
             </div>

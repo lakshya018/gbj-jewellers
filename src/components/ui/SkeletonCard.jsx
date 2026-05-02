@@ -1,6 +1,6 @@
 export default function SkeletonCard() {
   return (
-    <div className="bg-white overflow-hidden">
+    <div className="bg-card overflow-hidden">
       {/* Image skeleton */}
       <div className="aspect-square skeleton" />
       {/* Content skeleton */}

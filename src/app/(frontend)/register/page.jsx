@@ -28,7 +28,7 @@ export default function RegisterPage() {
 
         <div className="relative z-10 text-center px-12">
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
-            <div className="w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-8 ring-2 ring-gold-500/30 ring-offset-4 ring-offset-transparent overflow-hidden bg-white">
+            <div className="w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-8 ring-2 ring-primary/30 ring-offset-4 ring-offset-transparent overflow-hidden bg-card">
               <Image
                 src="/images/gbj_logo.png"
                 alt="GBJ Jewellers Logo"
@@ -38,17 +38,17 @@ export default function RegisterPage() {
                 priority
               />
             </div>
-            <h2 className="font-serif text-4xl text-white mb-4 leading-tight">
+            <h2 className="font-serif text-4xl text-on-dark mb-4 leading-tight">
               Begin Your<br />
               <span className="italic" style={{ color: '#e6b84a' }}>Jewellery Journey</span>
             </h2>
-            <p className="text-white/50 text-sm font-light leading-relaxed max-w-xs mx-auto">
+            <p className="text-on-dark/50 text-sm font-light leading-relaxed max-w-xs mx-auto">
               Join thousands of customers who trust GBJ for their most precious moments.
             </p>
 
             <div className="flex items-center justify-center gap-6 mt-10">
               {['Free Shipping', 'Easy Returns', 'Lifetime Exchange'].map((badge) => (
-                <div key={badge} className="text-[10px] tracking-[0.15em] uppercase text-gold-500/70 font-medium">
+                <div key={badge} className="text-[10px] tracking-[0.15em] uppercase text-primary/70 font-medium">
                   {badge}
                 </div>
               ))}
@@ -58,11 +58,11 @@ export default function RegisterPage() {
       </div>
 
       {/* Right: Auth Form */}
-      <div className="flex-1 bg-pearl flex items-center justify-center px-6 py-20">
+      <div className="flex-1 bg-bg flex items-center justify-center px-6 py-20">
         <div className="max-w-md w-full">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
             <div className="lg:hidden text-center mb-8">
-              <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 overflow-hidden bg-white shadow-md">
+              <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 overflow-hidden bg-card shadow-md">
                 <Image
                   src="/images/gbj_logo.png"
                   alt="GBJ Jewellers Logo"
@@ -75,22 +75,22 @@ export default function RegisterPage() {
             </div>
 
             <div className="mb-8">
-              <h1 className="font-serif text-3xl text-charcoal tracking-tight">
+              <h1 className="font-serif text-3xl text-text tracking-tight">
                 Create your account
               </h1>
-              <p className="text-gray-400 text-sm mt-2 font-light">
+              <p className="text-muted text-sm mt-2 font-light">
                 Join GBJ to save wishlists, track orders & get exclusive offers
               </p>
             </div>
 
-            <div className="bg-white p-7 rounded-2xl shadow-xl shadow-black/[0.03] border border-gray-100/80">
+            <div className="bg-card p-7 rounded-2xl shadow-xl shadow-black/[0.03] border border-gray-100/80">
               <FirebaseAuthUI onSuccess={() => router.push('/account')} />
             </div>
 
             <div className="mt-6 text-center">
-              <p className="text-gray-400 text-sm">
+              <p className="text-muted text-sm">
                 Already have an account?{' '}
-                <Link href="/login" className="text-gold-600 font-semibold hover:underline underline-offset-4 transition-all">
+                <Link href="/login" className="text-primary-hover font-semibold hover:underline underline-offset-4 transition-all">
                   Sign in
                 </Link>
               </p>
