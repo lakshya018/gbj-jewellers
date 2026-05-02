@@ -41,28 +41,38 @@ export default function FirebaseAuthUI({ onSuccess }) {
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleGoogle = async () => {
-    setError('');
+    // 1. Create provider immediately
+    const provider = new GoogleAuthProvider();
+    provider.setCustomParameters({ prompt: 'select_account' });
+
+    // 2. Call signInWithPopup SYNCHRONOUSLY before any React state updates.
+    // If we update state first, React 18 concurrent mode might decouple the 
+    // user click from the popup request, causing 'auth/popup-blocked'.
+    const popupPromise = signInWithPopup(auth, provider);
+
+    // 3. Now we can safely update UI state while the popup is opening
     setLoading(true);
+    setError('');
+
     try {
-      const provider = new GoogleAuthProvider();
-      // Try popup first — best UX (no page reload)
-      const result = await signInWithPopup(auth, provider);
+      const result = await popupPromise;
       if (result?.user) onSuccess?.();
     } catch (err) {
       if (err.code === 'auth/popup-blocked') {
-        // Popup blocked → fall back to redirect
+        // Only if they manually block popups aggressively, fallback to redirect
         try {
-          const provider = new GoogleAuthProvider();
           await signInWithRedirect(auth, provider);
-          return; // page will redirect
         } catch (redirectErr) {
           setError(redirectErr.message || 'Google sign-in failed');
+          setLoading(false);
         }
       } else if (err.code !== 'auth/popup-closed-by-user') {
         setError(err.message || 'Google sign-in failed');
+        setLoading(false);
+      } else {
+        // User closed popup
+        setLoading(false);
       }
-    } finally {
-      setLoading(false);
     }
   };
 
