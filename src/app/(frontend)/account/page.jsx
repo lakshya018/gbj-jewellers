@@ -84,9 +84,6 @@ export default function AccountPage() {
                   {firstName[0].toUpperCase()}
                 </div>
               )}
-              <div className="absolute -bottom-1 -right-1 w-7 h-7 bg-green-500 rounded-lg ring-3 ring-[#1a1a2e] flex items-center justify-center">
-                <CheckCircle size={14} className="text-on-dark" />
-              </div>
             </div>
 
             {/* Info */}
