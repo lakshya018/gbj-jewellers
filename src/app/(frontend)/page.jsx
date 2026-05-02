@@ -6,7 +6,6 @@ import PromoBanners from '@/components/sections/PromoBanners';
 import TrustStrip from '@/components/sections/TrustStrip';
 import AboutSection from '@/components/sections/AboutSection';
 import ContactSection from '@/components/sections/ContactSection';
-import Footer from '@/components/layout/Footer';
 
 export const metadata = {
   title: 'GBJ Jewellers — Luxury Gold & Diamond Jewellery',
@@ -29,7 +28,6 @@ export default async function HomePage() {
       <PromoBanners banners={banners} />
       <AboutSection />
       <ContactSection />
-      <Footer />
     </main>
   );
 }
