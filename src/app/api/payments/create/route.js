@@ -60,7 +60,8 @@ export async function POST(req) {
       });
     } catch (rpErr) {
       console.error('Razorpay Error:', rpErr);
-      return NextResponse.json({ error: 'Razorpay order creation failed' }, { status: 500 });
+      const details = rpErr.error ? rpErr.error.description : (rpErr.message || JSON.stringify(rpErr));
+      return NextResponse.json({ error: 'Razorpay order creation failed', details }, { status: 500 });
     }
 
     const order = await payload.create({
