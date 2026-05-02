@@ -22,43 +22,50 @@ export default function FirebaseAuthUI({ onSuccess }) {
   const recaptchaWidgetRef = useRef(null);
 
   // In your useEffect — replace what you have
-useEffect(() => {
-  // TEMP DEBUG
-  auth.onAuthStateChanged(user => {
-    console.log('🔥 Auth state:', user ? user.email : 'NOT LOGGED IN');
-  });
+  useEffect(() => {
+    auth.onAuthStateChanged(user => {
+      console.log('🔥 Auth state:', user ? user.email : 'null');
+    });
 
-  getRedirectResult(auth)
-    .then((result) => {
-      console.log('📦 Redirect result:', result ? result.user.email : 'null');
-      if (result?.user) onSuccess?.();
-    })
-    .catch((err) => {
-      console.log('❌ Redirect error:', err.code, err.message);
-    })
-    .finally(() => setLoading(false));
-}, []); 
+    setLoading(true);
+    getRedirectResult(auth)
+      .then((result) => {
+        console.log('📦 Redirect result:', result?.user?.email ?? 'null');
+        if (result?.user) onSuccess?.();
+      })
+      .catch((err) => {
+        console.log('❌ Error:', err.code, err.message);
+        if (err.code !== 'auth/popup-closed-by-user') {
+          setError(err.message || 'Google sign-in failed');
+        }
+      })
+      .finally(() => setLoading(false));
+  }, []); // eslint-disable-line
 
-const handleGoogle = async () => {
-  const provider = new GoogleAuthProvider();
-  provider.setCustomParameters({ prompt: 'select_account' });
-  
-  setLoading(true);
-  setError('');
+  const handleGoogle = async () => {
+    const provider = new GoogleAuthProvider();
+    provider.setCustomParameters({ prompt: 'select_account' });
 
-  try {
-    const result = await signInWithPopup(auth, provider);
-    if (result?.user) onSuccess?.();
-  } catch (err) {
-    if (err.code === 'auth/popup-blocked') {
-      setError('Popup was blocked. Please allow popups for this site and try again.');
-    } else if (err.code !== 'auth/popup-closed-by-user') {
-      setError(err.message || 'Google sign-in failed');
+    setLoading(true);
+    setError('');
+
+    try {
+      // Always use redirect in production, popup on localhost
+      if (window.location.hostname === 'localhost') {
+        const result = await signInWithPopup(auth, provider);
+        if (result?.user) onSuccess?.();
+      } else {
+        await signInWithRedirect(auth, provider);
+        // Page will redirect — no code runs after this
+      }
+    } catch (err) {
+      if (err.code !== 'auth/popup-closed-by-user') {
+        setError(err.message || 'Google sign-in failed');
+      }
+      setLoading(false);
     }
-  } finally {
-    setLoading(false);
-  }
-};
+  };
+
   const setupRecaptcha = useCallback(() => {
     if (recaptchaWidgetRef.current) return;
     try {
